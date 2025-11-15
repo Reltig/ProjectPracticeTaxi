@@ -18,6 +18,7 @@
 		<ActiveObjectClass>
 			<Id>1762251615701</Id>
 			<Name><![CDATA[Main]]></Name>
+			<Import><![CDATA[import java.util.function.DoubleUnaryOperator;]]></Import>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1762251615706</Id>
@@ -192,13 +193,18 @@ schedule(order);]]></Action>
 						<Name><![CDATA[order]]></Name>
 						<Type><![CDATA[Order]]></Type>
 					</Parameter>
-					<Body><![CDATA[for (Vehicle v: vehicles) {
-	if (v.order == null) {
-		send(order, v);
-		return;
+					<Body><![CDATA[Vehicle chosen = null;
+double minDistance = Double.MAX_VALUE;
+for (Vehicle v: vehicles) {
+	if (v.order != null) continue;
+	double newDistance = v.distanceTo(order.start.getLatitude(), order.start.getLongitude());
+	if (newDistance < minDistance){
+		minDistance = newDistance;
+		chosen = v;
 	}
 }
-orders.push(order);]]></Body>
+if (chosen != null) send(order, chosen);
+else orders.push(order);]]></Body>
 				</Function>
 			</Functions>
 			<AgentLinks>
