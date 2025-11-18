@@ -18,7 +18,7 @@
 		<ActiveObjectClass>
 			<Id>1762251615701</Id>
 			<Name><![CDATA[Main]]></Name>
-			<Import><![CDATA[import java.util.function.DoubleUnaryOperator;]]></Import>
+			<Import><![CDATA[import java.util.Random;]]></Import>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1762251615706</Id>
@@ -217,6 +217,7 @@ order.start = endpoints.random();
 order.finish = endpoints.random();
 //сохраняем время создания заказа
 order.startTime = time();
+order.prioriry = new Random().nextInt(100);
 schedule(order);]]></Action>
 				</Event>
 			</Events>
@@ -1855,6 +1856,30 @@ order = main.orders.remove(orderIndex);]]></Body>
 						<SdArray>false</SdArray>
 						<ParameterEditor>
 							<Id>1763194416564</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1763478231879</Id>
+					<Name><![CDATA[prioriry]]></Name>
+					<X>50</X><Y>240</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[int]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1763478231877</Id>
 							<EditorContolType>TEXT_BOX</EditorContolType>
 							<MinSliderValue><![CDATA[0]]></MinSliderValue>
 							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
