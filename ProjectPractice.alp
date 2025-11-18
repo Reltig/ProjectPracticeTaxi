@@ -215,8 +215,6 @@
 					<Action><![CDATA[projectpractice.Order order = new projectpractice.Order();
 order.start = endpoints.random();
 order.finish = endpoints.random();
-//сохраняем время создания заказа
-order.startTime = time();
 order.prioriry = new Random().nextInt(100);
 schedule(order);]]></Action>
 				</Event>
@@ -1117,6 +1115,7 @@ else orders.push(order);]]></Body>
 					<ShowLabel>true</ShowLabel>
 					<Properties Width="100" Height="30">
 						<EntryAction><![CDATA[distanceToStart = distanceByRoute(order.start)/1000;
+order.startTime = time();
 moveTo(order.start);]]></EntryAction>
 						<ExitAction><![CDATA[main.emptyMileage += distanceToStart;]]></ExitAction>
 						<FillColor/>
