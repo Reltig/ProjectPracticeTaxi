@@ -11,6 +11,24 @@
 	<EngineVersion>6</EngineVersion>
 	<JavaPackageName><![CDATA[projectpractice]]></JavaPackageName>
 	<ModelTimeUnit><![CDATA[Minute]]></ModelTimeUnit>
+	<OptionLists>
+		<OptionList>
+			<Id>1763881460742</Id>
+			<Name><![CDATA[ServiceType]]></Name>
+			<Option>
+				<Id>1763881460743</Id>
+				<Name><![CDATA[Econom]]></Name>
+			</Option>
+			<Option>
+				<Id>1763881460744</Id>
+				<Name><![CDATA[Comfort]]></Name>
+			</Option>
+			<Option>
+				<Id>1763881460745</Id>
+				<Name><![CDATA[Business]]></Name>
+			</Option>
+		</OptionList>
+	</OptionLists>
 	<Folders>
 	</Folders>
 	<ActiveObjectClasses>
@@ -19,6 +37,7 @@
 			<Id>1762251615701</Id>
 			<Name><![CDATA[Main]]></Name>
 			<Import><![CDATA[import java.util.Random;]]></Import>
+			<StartupCode><![CDATA[Random random = new Random();]]></StartupCode>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1762251615706</Id>
@@ -113,7 +132,7 @@
 				<Variable Class="PlainVariable">
 					<Id>1762520091347</Id>
 					<Name><![CDATA[completedOrders]]></Name>
-					<X>-170</X><Y>230</Y>
+					<X>-170</X><Y>280</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -129,7 +148,7 @@
 					<Id>1763193688009</Id>
 					<Name><![CDATA[emptyMileage]]></Name>
 					<Description><![CDATA[пустой пробег]]></Description>
-					<X>-170</X><Y>270</Y>
+					<X>-170</X><Y>320</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -144,7 +163,7 @@
 				<Variable Class="PlainVariable">
 					<Id>1763193984013</Id>
 					<Name><![CDATA[mediumOrderDuration]]></Name>
-					<X>-170</X><Y>310</Y>
+					<X>-170</X><Y>360</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -156,13 +175,28 @@
 				<Variable Class="PlainVariable">
 					<Id>1763195250743</Id>
 					<Name><![CDATA[allOrdersDuration]]></Name>
-					<X>-170</X><Y>350</Y>
+					<X>-170</X><Y>400</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[double]]></Type>        
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1763881930198</Id>
+					<Name><![CDATA[random]]></Name>
+					<X>-170</X><Y>110</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[Random]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[new Random()]]></Code>
+						</InitialValue>
 					</Properties>
 				</Variable>
 				<Variable Class="CollectionVariable">
@@ -216,7 +250,10 @@
 Endpoint start = endpoints.random();
 order.start = start;
 order.finish = endpoints.random();
-order.prioriry = new Random().nextInt(100);
+while (order.start == order.finish)order.finish = endpoints.random();
+order.isHighestPriority = random.nextBoolean();
+order.isChildSeat = random.nextBoolean();
+order.type = ServiceType.random(random);
 
 Order orderAnimation = add_orderAnimations();
 send(start, orderAnimation);
@@ -279,7 +316,7 @@ else orders.push(order);]]></Body>
 				<EmbeddedObject>
 					<Id>1762253809724</Id>
 					<Name><![CDATA[endpoints]]></Name>
-					<X>-170</X><Y>130</Y>
+					<X>-170</X><Y>180</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -364,7 +401,7 @@ else orders.push(order);]]></Body>
 				<EmbeddedObject>
 					<Id>1762254175345</Id>
 					<Name><![CDATA[vehicles]]></Name>
-					<X>-170</X><Y>160</Y>
+					<X>-170</X><Y>210</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -413,7 +450,7 @@ else orders.push(order);]]></Body>
 				<EmbeddedObject>
 					<Id>1763576946462</Id>
 					<Name><![CDATA[orderAnimations]]></Name>
-					<X>-170</X><Y>190</Y>
+					<X>-170</X><Y>240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -447,7 +484,13 @@ else orders.push(order);]]></Body>
 							<Name><![CDATA[duration]]></Name>
 						</Parameter>
 						<Parameter>
-							<Name><![CDATA[prioriry]]></Name>
+							<Name><![CDATA[isHighestPriority]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[isChildSeat]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[type]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -1967,21 +2010,69 @@ order = main.orders.remove(orderIndex);]]></Body>
 				</Variable>
 				<Variable Class="Parameter">
 					<Id>1763478231879</Id>
-					<Name><![CDATA[prioriry]]></Name>
+					<Name><![CDATA[isHighestPriority]]></Name>
 					<X>50</X><Y>240</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[int]]></Type>
+						<Type><![CDATA[boolean]]></Type>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[0]]></Code>
+							<Code><![CDATA[false]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1763478231877</Id>
+							<EditorContolType>CHECK_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1763881228134</Id>
+					<Name><![CDATA[isChildSeat]]></Name>
+					<X>50</X><Y>270</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[boolean]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[false]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1763881228132</Id>
+							<EditorContolType>CHECK_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1763881246072</Id>
+					<Name><![CDATA[type]]></Name>
+					<X>50</X><Y>300</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[ServiceType]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[ServiceType.Econom]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1763881246070</Id>
 							<EditorContolType>TEXT_BOX</EditorContolType>
 							<MinSliderValue><![CDATA[0]]></MinSliderValue>
 							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
