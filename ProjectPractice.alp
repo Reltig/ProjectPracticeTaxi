@@ -213,9 +213,14 @@
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
 					<Action><![CDATA[projectpractice.Order order = new projectpractice.Order();
-order.start = endpoints.random();
+Endpoint start = endpoints.random();
+order.start = start;
 order.finish = endpoints.random();
 order.prioriry = new Random().nextInt(100);
+
+Order orderAnimation = add_orderAnimations();
+send(start, orderAnimation);
+
 schedule(order);]]></Action>
 				</Event>
 			</Events>
@@ -244,16 +249,8 @@ for (Vehicle v: vehicles) {
 		chosen = v;
 	}
 }
-if (chosen != null) {
-	Order orderAnimation = add_orderAnimations();
-	send(order.start, orderAnimation);
-	send(order, chosen);
-}
-else {
-	orders.push(order);
-	Order orderAnimation = add_orderAnimations();
-	send(order.start, orderAnimation);
-}]]></Body>
+if (chosen != null) send(order, chosen);
+else orders.push(order);]]></Body>
 				</Function>
 			</Functions>
 			<AgentLinks>
@@ -635,8 +632,8 @@ else {
 					<ScaleType>AUTOMATICALLY_CALCULATED</ScaleType>
 					<GISScaleForRealEmbeddedObjectPresentationSize>1000</GISScaleForRealEmbeddedObjectPresentationSize>
 					<GISScaleForFixedEmbeddedObjectPresentationSize>1000000000</GISScaleForFixedEmbeddedObjectPresentationSize>
-					<Latitude>56.83988806076443</Latitude>
-					<Longitude>60.61945779221879</Longitude>
+					<Latitude>56.820210431155225</Latitude>
+					<Longitude>60.55384124182009</Longitude>
 				</EmbeddedObjectPresentation>
 			</Presentation>
 
@@ -1192,7 +1189,7 @@ else {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
-						<Type><![CDATA[Order]]></Type>        
+						<Type><![CDATA[int]]></Type>        
 					</Properties>
 				</Variable>
 			</Variables>
@@ -1221,8 +1218,7 @@ else {
 						<EntryAction><![CDATA[distanceToStart = distanceByRoute(order.start)/1000;
 order.startTime = time();
 moveTo(order.start);]]></EntryAction>
-						<ExitAction><![CDATA[main.emptyMileage += distanceToStart;
-int index = main.orders]]></ExitAction>
+						<ExitAction><![CDATA[main.emptyMileage += distanceToStart;]]></ExitAction>
 						<FillColor/>
 					</Properties>
 				</StatechartElement>
@@ -1310,6 +1306,8 @@ int index = main.orders]]></ExitAction>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1762514452820" Target="1762516564205" Trigger="arrival">
+						<Action><![CDATA[Order orderAnimation = main.orderAnimations.get(orderIndex);
+send("travel!", orderAnimation);]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -1443,7 +1441,7 @@ order = null;]]></Action>
 					<ShowLabel>true</ShowLabel>
 					<Body><![CDATA[double minDistance = Double.POSITIVE_INFINITY;
 int i = 0;
-int orderIndex = 0;
+orderIndex = 0;
 
 for(Order currentOrder : main.orders) {
     double distance = distanceByRoute(currentOrder.start);
@@ -1454,11 +1452,7 @@ for(Order currentOrder : main.orders) {
     i = i + 1;
 }
 
-
-Order orderAnimation = main.orderAnimations.get(orderIndex);
-main.remove_orderAnimations(orderAnimation);
-order = main.orders.remove(orderIndex);
-//send("travel!", order);]]></Body>
+order = main.orders.remove(orderIndex);]]></Body>
 				</Function>
 			</Functions>
 			<AgentLinks>
@@ -2018,7 +2012,6 @@ order = main.orders.remove(orderIndex);
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties>	
-						<Action><![CDATA[main.add_orderAnimations();]]></Action>
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="EntryPoint" ParentState="ROOT_NODE">
