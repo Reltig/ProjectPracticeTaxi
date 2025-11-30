@@ -280,6 +280,7 @@ schedule(order);]]></Action>
 double minDistance = Double.MAX_VALUE;
 for (Vehicle v: vehicles) {
 	if (v.order != null) continue;
+	if (order.isChildSeat && !v.hasChildSeat) continue;
 	double newDistance = v.distanceTo(order.start.getLatitude(), order.start.getLongitude());
 	if (newDistance < minDistance){
 		minDistance = newDistance;
@@ -419,6 +420,18 @@ else orders.push(order);]]></Body>
 						</GenericParameterSubstituteReference>
 					</GenericParameterSubstitute>
 					<Parameters>
+						<Parameter>
+							<Name><![CDATA[type]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[ServiceType.random(random)]]></Code>
+							</Value>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[hasChildSeat]]></Name>
+							<Value Class="CodeValue">
+								<Code><![CDATA[random.nextBoolean()]]></Code>
+							</Value>
+						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
 					<Replication Class="CodeValue">
@@ -1234,6 +1247,51 @@ else orders.push(order);]]></Body>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[int]]></Type>        
 					</Properties>
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1764340656760</Id>
+					<Name><![CDATA[type]]></Name>
+					<X>40</X><Y>170</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[ServiceType]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1764340656758</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1764340717202</Id>
+					<Name><![CDATA[hasChildSeat]]></Name>
+					<X>40</X><Y>200</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[boolean]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[new Random().nextBoolean()]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1764340717200</Id>
+							<EditorContolType>CHECK_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
 				</Variable>
 			</Variables>
 			<StatechartElements>
