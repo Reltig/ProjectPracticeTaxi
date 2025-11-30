@@ -199,6 +199,22 @@
 						</InitialValue>
 					</Properties>
 				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1764338764941</Id>
+					<Name><![CDATA[busyVehicles]]></Name>
+					<Description><![CDATA[кол-во свободных машин]]></Description>
+					<X>-170</X><Y>430</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
 				<Variable Class="CollectionVariable">
 					<Id>1762512538547</Id>
 					<Name><![CDATA[orders]]></Name>
@@ -691,6 +707,28 @@ else orders.push(order);]]></Body>
 					<Latitude>56.820210431155225</Latitude>
 					<Longitude>60.55384124182009</Longitude>
 				</EmbeddedObjectPresentation>
+				<Text>
+					<Id>1764338660994</Id>
+					<Name><![CDATA[text3]]></Name>
+					<X>20</X><Y>190</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[Загрузка бортов]]></Text>
+					<TextCode><![CDATA[String.format("Загрузка бортов: %.0f%%", busyVehicles*100/vehicles.size())]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>20</Size>
+						<Style>0</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
 			</Presentation>
 
 				</Level>
@@ -1316,7 +1354,8 @@ else orders.push(order);]]></Body>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties Width="100" Height="30">
-						<EntryAction><![CDATA[distanceToStart = distanceByRoute(order.start)/1000;
+						<EntryAction><![CDATA[main.busyVehicles++;
+distanceToStart = distanceByRoute(order.start)/1000;
 order.startTime = time();
 moveTo(order.start);]]></EntryAction>
 						<ExitAction><![CDATA[main.emptyMileage += distanceToStart;]]></ExitAction>
@@ -1333,6 +1372,7 @@ moveTo(order.start);]]></EntryAction>
 					<ShowLabel>true</ShowLabel>
 					<Properties Width="100" Height="30">
 						<EntryAction><![CDATA[moveTo(order.finish)]]></EntryAction>
+						<ExitAction><![CDATA[main.busyVehicles--;]]></ExitAction>
 						<FillColor/>
 					</Properties>
 				</StatechartElement>
@@ -1543,15 +1583,22 @@ order = null;]]></Action>
 					<Body><![CDATA[double minDistance = Double.POSITIVE_INFINITY;
 int i = 0;
 orderIndex = 0;
+int highestPriorityIndex = -1;
 
-for(Order currentOrder : main.orders) {
+// новый отсортированный список
+List<Order> sortedOrders = sortAscending(main.orders, x -> x.isHighestPriority ? 0 : 1);
+
+for(Order currentOrder : sortedOrders) {
     double distance = distanceByRoute(currentOrder.start);
-        if(distance < minDistance) {
-            minDistance = distance;
-            orderIndex = i;
-        }
-    i = i + 1;
+    if(distance < minDistance) {
+        minDistance = distance;
+        orderIndex = i;
+        if (currentOrder.isHighestPriority) highestPriorityIndex = i;
+    }
+    i++;
 }
+
+if (highestPriorityIndex != -1) orderIndex = highestPriorityIndex;
 
 order = main.orders.remove(orderIndex);]]></Body>
 				</Function>
