@@ -1679,7 +1679,7 @@ order = null;]]></Action>
 					<ShowLabel>true</ShowLabel>
 					<Body><![CDATA[double minDistance = Double.POSITIVE_INFINITY;
 int i = 0;
-orderIndex = -1;
+orderIndex = 0;
 Order closestOrder = new Order();
 
 // Получаем список заказов с высшим приоритетом
@@ -1696,14 +1696,13 @@ if (priorityOrders.size() > 0) {
 }
 else {// Поиск заказа с минимальным расстоянием среди неприоритетных (false)
     closestOrder = main.orders.stream()
-        .filter(order -> order.isHighestPriority)
+        .filter(order -> !order.isHighestPriority)
         .min(Comparator.comparing(order -> distanceByRoute(order.start)))
         .get();
 }
-if (orderIndex !=-1) {
-	orderIndex = main.orders.indexOf(closestOrder);
-	order = main.orders.remove(orderIndex);
-}]]></Body>
+//здесь сделать проверку, чтобы пропускать "пустой" заказ, когда ничего не найдено
+orderIndex = main.orders.indexOf(closestOrder);
+order = main.orders.remove(orderIndex);]]></Body>
 				</Function>
 				<Function AccessType="private" StaticFunction="false">
 					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
