@@ -216,7 +216,7 @@ prepare();]]></StartupCode>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
-						<Type><![CDATA[double]]></Type>        
+						<Type><![CDATA[int]]></Type>        
 						<InitialValue Class="CodeValue">
 							<Code><![CDATA[0]]></Code>
 						</InitialValue>
@@ -226,7 +226,7 @@ prepare();]]></StartupCode>
 					<Id>1766480244950</Id>
 					<Name><![CDATA[lostOrders]]></Name>
 					<Description><![CDATA[кол-во свободных машин]]></Description>
-					<X>-170</X><Y>510</Y>
+					<X>-170</X><Y>540</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -271,25 +271,9 @@ prepare();]]></StartupCode>
 					</Properties>
 				</Variable>
 				<Variable Class="PlainVariable">
-					<Id>1766483578325</Id>
-					<Name><![CDATA[lostOrders1]]></Name>
-					<Description><![CDATA[кол-во свободных машин]]></Description>
-					<X>812</X><Y>497</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
-						<Type><![CDATA[double]]></Type>        
-						<InitialValue Class="CodeValue">
-							<Code><![CDATA[0]]></Code>
-						</InitialValue>
-					</Properties>
-				</Variable>
-				<Variable Class="PlainVariable">
 					<Id>1766484740088</Id>
-					<Name><![CDATA[activeVehicles]]></Name>
-					<X>-170</X><Y>330</Y>
+					<Name><![CDATA[workingVehicles]]></Name>
+					<X>-170</X><Y>510</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -304,7 +288,22 @@ prepare();]]></StartupCode>
 				<Variable Class="PlainVariable">
 					<Id>1766485567095</Id>
 					<Name><![CDATA[completedOrdersPerVehicle]]></Name>
-					<X>-170</X><Y>540</Y>
+					<X>-170</X><Y>570</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1766504043673</Id>
+					<Name><![CDATA[reactionTimeFastTotal]]></Name>
+					<X>-170</X><Y>600</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1066,7 +1065,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1762520037030</Id>
 					<Name><![CDATA[text]]></Name>
-					<X>20</X><Y>20</Y>
+					<X>150</X><Y>35</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1076,11 +1075,11 @@ return c;]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
-					<Text><![CDATA[Выполнено заказов]]></Text>
-					<TextCode><![CDATA[String.format("Выполнено заказов: %s", completedOrders)]]></TextCode>
+					<Text><![CDATA[всего:]]></Text>
+					<TextCode><![CDATA[String.format("всего: %s", completedOrders)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>18</Size>
+						<Size>16</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -1088,7 +1087,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1763195656457</Id>
 					<Name><![CDATA[text1]]></Name>
-					<X>20</X><Y>60</Y>
+					<X>20</X><Y>80</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1110,7 +1109,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1763295919557</Id>
 					<Name><![CDATA[text2]]></Name>
-					<X>20</X><Y>100</Y>
+					<X>20</X><Y>110</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1161,7 +1160,7 @@ return c;]]></Body>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
 					<Text><![CDATA[Загрузка бортов]]></Text>
-					<TextCode><![CDATA[String.format("Загрузка бортов: %.0f%%", busyVehicles*100/vehicles.size())]]></TextCode>
+					<TextCode><![CDATA[String.format("Загрузка бортов: " + busyVehicles + "/" + vehicles.size())]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>16</Size>
@@ -1190,7 +1189,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766480211870</Id>
 					<Name><![CDATA[text4]]></Name>
-					<X>20</X><Y>180</Y>
+					<X>20</X><Y>170</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1321,7 +1320,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766484679536</Id>
 					<Name><![CDATA[text8]]></Name>
-					<X>20</X><Y>210</Y>
+					<X>50</X><Y>60</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1331,8 +1330,8 @@ return c;]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
-					<Text><![CDATA[Выполнено заказов в среднем на борт:]]></Text>
-					<TextCode><![CDATA[String.format("Выполнено заказов в среднем на борт: %.0f", completedOrdersPerVehicle)]]></TextCode>
+					<Text><![CDATA[в среднем на борт:]]></Text>
+					<TextCode><![CDATA[String.format("в среднем на борт: %.0f", completedOrdersPerVehicle)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>16</Size>
@@ -1360,6 +1359,50 @@ return c;]]></Body>
 						<LabelText><![CDATA[start]]></LabelText>
 					</ExtendedProperties>
 				</Control>
+				<Text>
+					<Id>1766504110450</Id>
+					<Name><![CDATA[text9]]></Name>
+					<X>20</X><Y>200</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[Время реакции на срочный заказ]]></Text>
+					<TextCode><![CDATA[String.format("Среднее время реакции на срочный заказ: %.0f мин", (double) reactionTimeFastTotal/workingVehicles)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>16</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1766504444867</Id>
+					<Name><![CDATA[text10]]></Name>
+					<X>20</X><Y>10</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[Выполнено заказов]]></Text>
+					<TextCode><![CDATA[String.format("Выполнено заказов")]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>18</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
 			</Presentation>
 
 				</Level>
@@ -1918,6 +1961,21 @@ import java.util.Optional;]]></Import>
 						<Type><![CDATA[int]]></Type>        
 					</Properties>
 				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1766500803852</Id>
+					<Name><![CDATA[inWork]]></Name>
+					<X>40</X><Y>260</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[boolean]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[false]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
 				<Variable Class="Parameter">
 					<Id>1764340656760</Id>
 					<Name><![CDATA[type]]></Name>
@@ -2005,7 +2063,13 @@ moveTo(order.start);]]></EntryAction>
 					<Properties Width="100" Height="30">
 						<EntryAction><![CDATA[moveTo(order.finish)]]></EntryAction>
 						<ExitAction><![CDATA[main.busyVehicles--;
-main.activeVehicles++;]]></ExitAction>
+//если автомобиль впервые выезжает на вызов и пассажир уже в машине,
+//то включаем автомобиль в подсчет статистики 
+//по кол-ву выполненных заказов на борт
+if (!inWork) {
+	main.workingVehicles++;
+	inWork = true;
+}]]></ExitAction>
 						<FillColor/>
 					</Properties>
 				</StatechartElement>
@@ -2119,11 +2183,11 @@ order.duration = order.finishTime - order.startTime;
 main.allOrdersDuration += order.duration;
 main.mediumOrderDuration = main.allOrdersDuration / main.completedOrders;
 
-OrderEnd orderAnimationEnd = main.orderAnimationsEnd.get(orderIndex);
-main.remove_orderAnimationsEnd(orderAnimationEnd);
+//OrderEnd orderAnimationEnd = main.orderAnimationsEnd.get(orderIndex);
+main.remove_orderAnimationsEnd(order.imageEnd);
 order = null;
-
-main.completedOrdersPerVehicle = (double)main.completedOrders/main.activeVehicles;]]></Action>
+//считаем среднее кол-во выполненных заказов на борт
+main.completedOrdersPerVehicle = (double)main.completedOrders/main.workingVehicles;]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -2220,11 +2284,13 @@ main.completedOrdersPerVehicle = (double)main.completedOrders/main.activeVehicle
 					<Body><![CDATA[double minDistance = Double.POSITIVE_INFINITY;
 int i = 0;
 orderIndex = 0;
-Order closestOrder = new Order();
+Order closestOrder = null;
+
+double reactionPriorityTime = time();
 
 // Получаем список заказов с высшим приоритетом
 List<Order> priorityOrders = main.orders.stream()
-    .filter(o -> o.isHighestPriority)
+    .filter(o -> checkOrderCharacteristics(o, true))
     .toList();
 
 if (priorityOrders.size() > 0) {
@@ -2236,13 +2302,19 @@ if (priorityOrders.size() > 0) {
 }
 else {// Поиск заказа с минимальным расстоянием среди неприоритетных (false)
     closestOrder = main.orders.stream()
-        .filter(order -> !order.isHighestPriority)
+        .filter(order -> checkOrderCharacteristics(order, false))
         .min(Comparator.comparing(order -> distanceByRoute(order.start)))
         .get();
 }
-//здесь сделать проверку, чтобы пропускать "пустой" заказ, когда ничего не найдено
-orderIndex = main.orders.indexOf(closestOrder);
-order = main.orders.remove(orderIndex);]]></Body>
+//если машина удовлетворяет требованиям заказа, берем найденынй заказ
+if (closestOrder != null){
+	orderIndex = main.orders.indexOf(closestOrder);
+	order = main.orders.remove(orderIndex);
+	if (order.isHighestPriority) {
+		main.reactionTimeFastTotal += time() - reactionPriorityTime;
+		System.out.println(time() - reactionPriorityTime);
+	}
+}]]></Body>
 				</Function>
 				<Function AccessType="private" StaticFunction="false">
 					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
@@ -2836,7 +2908,7 @@ order = main.orders.remove(orderIndex);]]></Body>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1763726971975" Target="1764526789087" Trigger="message">
-						<Action><![CDATA[main.remove_orderAnimationsStart(this);]]></Action>
+						<Action><![CDATA[main.remove_orderAnimationsStart(imageStart);]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
