@@ -170,7 +170,7 @@ prepare();]]></StartupCode>
 				<Variable Class="PlainVariable">
 					<Id>1763193984013</Id>
 					<Name><![CDATA[mediumOrderDuration]]></Name>
-					<X>-170</X><Y>410</Y>
+					<X>-170</X><Y>400</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -315,6 +315,36 @@ prepare();]]></StartupCode>
 						</InitialValue>
 					</Properties>
 				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1766510548625</Id>
+					<Name><![CDATA[reactionTimeMedium]]></Name>
+					<X>-170</X><Y>630</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1766517827333</Id>
+					<Name><![CDATA[priorityOrdersCount]]></Name>
+					<X>-170</X><Y>140</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[int]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
 				<Variable Class="Parameter">
 					<Id>1765468115624</Id>
 					<Name><![CDATA[horizontalNodes]]></Name>
@@ -419,14 +449,16 @@ order.finish = finish;
 order.isHighestPriority = random.nextBoolean();
 order.isChildSeat = random.nextBoolean();
 order.type = ServiceType.random(random);
+order.startTime = time();
 
-Order orderAnimation = add_orderAnimationsStart();
-send(start, orderAnimation);
-order.imageStart = orderAnimation;
+OrderStart orderAnimationStart = add_orderAnimationsStart();
+order.imageStart = orderAnimationStart;
+orderAnimationStart.isHighestPriority = order.isHighestPriority; 
+send(start, orderAnimationStart);
 
 OrderEnd orderAnimationEnd = add_orderAnimationsEnd();
-send(finish, orderAnimationEnd);
 order.imageEnd = orderAnimationEnd;
+send(finish, orderAnimationEnd);
 
 schedule(order);]]></Action>
 				</Event>
@@ -448,6 +480,7 @@ schedule(order);]]></Action>
 					</Parameter>
 					<Body><![CDATA[Vehicle chosen = null;
 double minDistance = Double.MAX_VALUE;
+
 for (Vehicle v: vehicles) {
 	if (v.order != null) continue;
 	if (order.isChildSeat && !v.hasChildSeat) continue;
@@ -457,7 +490,13 @@ for (Vehicle v: vehicles) {
 		chosen = v;
 	}
 }
-if (chosen != null) send(order, chosen);
+if (chosen != null){
+	if (order.isHighestPriority){
+	    priorityOrdersCount += 1;
+		send(order, chosen);
+	}
+	if (!order.isHighestPriority && orders.size() == 0) send(order, chosen);
+}
 else orders.push(order);]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
@@ -544,6 +583,42 @@ for (int i = 0, j = n - 1; i < n; j = i++) {
 return c;]]></Body>
 				</Function>
 			</Functions>
+			<AnalysisData>
+    			<HistogramData>
+					<Id>1766511043124</Id>
+					<Name><![CDATA[orderDurationsDataset]]></Name>
+					<X>-170</X><Y>330</Y>
+					<Label><X>15</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<AutoUpdate>true</AutoUpdate>
+					<RecurrenceProperties>
+						<Id>1766511043122</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1766563200000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</RecurrenceCode>
+					</RecurrenceProperties>
+					<Value><![CDATA[]]></Value>
+					<NumberOfIntervals>10</NumberOfIntervals>
+					<MinMaxAutodetect>true</MinMaxAutodetect>
+					<RangeMinExpression><![CDATA[0]]></RangeMinExpression>
+					<RangeMaxExpression><![CDATA[1]]></RangeMaxExpression>
+					<InitialIntervalSize><![CDATA[0.1]]></InitialIntervalSize>
+					<CalculateCDF>true</CalculateCDF>
+					<CalculatePercentiles>false</CalculatePercentiles>
+					<LowPercent>10</LowPercent>
+					<HighPercent>10</HighPercent>
+					<Title><![CDATA[]]></Title>
+				</HistogramData>
+			</AnalysisData>
 			<AgentLinks>
 				<AgentLink>
 					<Id>1762251615702</Id>
@@ -715,8 +790,8 @@ return c;]]></Body>
 				</EmbeddedObject>
 				<EmbeddedObject>
 					<Id>1763576946462</Id>
-					<Name><![CDATA[orderAnimationsStart]]></Name>
-					<X>-170</X><Y>240</Y>
+					<Name><![CDATA[orderAnimationsStart1]]></Name>
+					<X>-410</X><Y>610</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -863,6 +938,78 @@ return c;]]></Body>
 					<QuantityColumn>
 					</QuantityColumn>
 				</EmbeddedObject>
+				<EmbeddedObject>
+					<Id>1766514094015</Id>
+					<Name><![CDATA[orderAnimationsStart]]></Name>
+					<X>-170</X><Y>240</Y>
+					<Label><X>20</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<PresentationId>1766514097291</PresentationId>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[projectpractice]]></PackageName>
+						<ClassName><![CDATA[OrderStart]]></ClassName>
+					</ActiveObjectClass>
+					<GenericParameterSubstitute>
+						<GenericParameterSubstituteReference>
+							<PackageName><![CDATA[projectpractice]]></PackageName>
+							<ClassName><![CDATA[OrderStart]]></ClassName>
+							<ItemName><![CDATA[1766513794366]]></ItemName>
+						</GenericParameterSubstituteReference>
+					</GenericParameterSubstitute>
+					<Parameters>
+						<Parameter>
+							<Name><![CDATA[start]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[finish]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[startTime]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[finishTime]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[duration]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[isHighestPriority]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[isChildSeat]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[type]]></Name>
+						</Parameter>
+					</Parameters>
+					<ReplicationFlag>true</ReplicationFlag>
+					<Replication Class="CodeValue">
+						<Code><![CDATA[100]]></Code>
+					</Replication>
+					<CollectionType>ARRAY_LIST_BASED</CollectionType>
+					<InEnvironment>true</InEnvironment>
+					<InitialLocationType>XYZ</InitialLocationType>
+					<ColumnCode Class="CodeValue">
+						<Code><![CDATA[0]]></Code>
+					</ColumnCode>
+					<RowCode Class="CodeValue">
+						<Code><![CDATA[0]]></Code>
+					</RowCode>
+					<LocationNameCode Class="CodeValue">
+						<Code><![CDATA[""]]></Code>
+					</LocationNameCode>
+					<InitializationType>EMPTY</InitializationType>
+					<InitializationDatabaseTableQuery>
+						<Id>1766514094013</Id>
+						<TableReference>
+						</TableReference>
+					</InitializationDatabaseTableQuery>
+					<InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType>
+					<QuantityColumn>
+					</QuantityColumn>
+				</EmbeddedObject>
 			</EmbeddedObjects>
 
 			<Presentation>
@@ -904,7 +1051,7 @@ return c;]]></Body>
 				<GISMap>
 					<Id>1762251623048</Id>
 					<Name><![CDATA[map]]></Name>
-					<X>220</X><Y>0</Y>
+					<X>240</X><Y>0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1056,8 +1203,8 @@ return c;]]></Body>
 					<LineColor>-14774017</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<Width>400</Width>
-					<Height>380</Height>
+					<Width>440</Width>
+					<Height>560</Height>
 					<Rotation>0.0</Rotation>
 					<FillColor>-1</FillColor>
 					<FillMaterial>null</FillMaterial>
@@ -1065,7 +1212,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1762520037030</Id>
 					<Name><![CDATA[text]]></Name>
-					<X>150</X><Y>35</Y>
+					<X>140</X><Y>60</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1130,7 +1277,7 @@ return c;]]></Body>
 				</Text>
 				<EmbeddedObjectPresentation>
 					<Id>1763576949053</Id>
-					<Name><![CDATA[orderAnimationsStart_presentation]]></Name>
+					<Name><![CDATA[orderAnimationsStart1_presentation]]></Name>
 					<X>0</X><Y>0</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
@@ -1233,7 +1380,7 @@ return c;]]></Body>
 				 	<EmbeddedIcon>false</EmbeddedIcon>				
 					<Id>1766482621914</Id>
 					<Name><![CDATA[carsCountSlider]]></Name>
-					<X>20</X><Y>320</Y>
+					<X>20</X><Y>280</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1247,7 +1394,7 @@ return c;]]></Body>
 						<DefaultValueCode><![CDATA[0]]></DefaultValueCode>
 						<Orientation>HORIZONTAL</Orientation>
 						<MinValue><![CDATA[100]]></MinValue>
-						<MaxValue><![CDATA[3000]]></MaxValue>
+						<MaxValue><![CDATA[2100]]></MaxValue>
 						<LinkTo>true</LinkTo>
 						<Link>carsCount</Link>
 					</ExtendedProperties>
@@ -1256,7 +1403,7 @@ return c;]]></Body>
 				 	<EmbeddedIcon>false</EmbeddedIcon>				
 					<Id>1766482739328</Id>
 					<Name><![CDATA[waitingTimeSlider]]></Name>
-					<X>170</X><Y>320</Y>
+					<X>170</X><Y>280</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1271,6 +1418,7 @@ return c;]]></Body>
 						<Orientation>HORIZONTAL</Orientation>
 						<MinValue><![CDATA[5]]></MinValue>
 						<MaxValue><![CDATA[120]]></MaxValue>
+						<Step><![CDATA[5]]></Step>
 						<LinkTo>true</LinkTo>
 						<Link>waitingTime</Link>
 					</ExtendedProperties>
@@ -1278,7 +1426,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766482826416</Id>
 					<Name><![CDATA[text6]]></Name>
-					<X>20</X><Y>290</Y>
+					<X>20</X><Y>250</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1299,7 +1447,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766482847153</Id>
 					<Name><![CDATA[text7]]></Name>
-					<X>160</X><Y>290</Y>
+					<X>160</X><Y>250</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1320,7 +1468,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766484679536</Id>
 					<Name><![CDATA[text8]]></Name>
-					<X>50</X><Y>60</Y>
+					<X>40</X><Y>40</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1339,26 +1487,6 @@ return c;]]></Body>
 					</Font>
 					<Alignment>LEFT</Alignment>
 				</Text>
-				<Control Type="Button">
-				 	<EmbeddedIcon>false</EmbeddedIcon>				
-					<Id>1766485395661</Id>
-					<Name><![CDATA[startButton]]></Name>
-					<X>140</X><Y>250</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<BasicProperties Width="100" Height="30">
-                        <EmbeddedIcon>false</EmbeddedIcon>	
-						<TextColor>-16777216</TextColor>
-						<Enabled>true</Enabled>
-					</BasicProperties>
-					<ExtendedProperties>
-						<Font Name="Dialog" Size="11" Style="0"/>
-						<LabelText><![CDATA[start]]></LabelText>
-					</ExtendedProperties>
-				</Control>
 				<Text>
 					<Id>1766504110450</Id>
 					<Name><![CDATA[text9]]></Name>
@@ -1372,8 +1500,8 @@ return c;]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
-					<Text><![CDATA[Время реакции на срочный заказ]]></Text>
-					<TextCode><![CDATA[String.format("Среднее время реакции на срочный заказ: %.0f мин", (double) reactionTimeFastTotal/workingVehicles)]]></TextCode>
+					<Text><![CDATA[Среднее время реакции на срочный заказ]]></Text>
+					<TextCode><![CDATA[String.format("Среднее время реакции на срочный заказ: %.1f мин", reactionTimeMedium)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>16</Size>
@@ -1403,6 +1531,91 @@ return c;]]></Body>
 					</Font>
 					<Alignment>LEFT</Alignment>
 				</Text>
+    			<Histogram>
+					<Id>1766511055136</Id>
+					<Name><![CDATA[chart]]></Name>
+					<X>0</X><Y>330</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<AutoUpdate>true</AutoUpdate>
+					<RecurrenceProperties>
+						<Id>1766511055135</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1766563200000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</RecurrenceCode>
+					</RecurrenceProperties>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Width>360</Width>
+					<Height>210</Height>
+					<BackgroundColor/>
+					<BorderColor/>
+					<ChartArea>
+						<XOffset>50</XOffset>
+						<YOffset>20</YOffset>
+						<Width>280</Width>
+						<Height>130</Height>
+						<BackgroundColor>-1</BackgroundColor>
+						<BorderColor>-16777216</BorderColor>
+						<GridColor>-12566464</GridColor>
+					</ChartArea>
+					<Legend>
+						<Place>NORTH</Place>
+						<TextColor>-16777216</TextColor>
+						<Size>30</Size>
+					</Legend>
+					<Labels>
+						<HorLabelsPosition>DEFAULT</HorLabelsPosition>
+						<VerLabelsPosition>DEFAULT</VerLabelsPosition>
+						<TextColor>-12566464</TextColor>
+					</Labels>
+					<ShowLegend>true</ShowLegend>
+					<ShowPDF>true</ShowPDF>
+					<ShowCDF>false</ShowCDF>
+					<ShowMean>false</ShowMean>
+					<Bars>
+						<Direction>UP</Direction>
+						<RelativeWidth>0.8</RelativeWidth>
+					</Bars>
+					<HistogramDataExpression>
+					<Id>1766511055138</Id>
+					<Expression><![CDATA[orderDurationsDataset]]></Expression>
+						<ColorPDF>-6632142</ColorPDF>
+						<ColorCDF>-8388480</ColorCDF>
+						<ColorLowPercent>-10496</ColorLowPercent>
+						<ColorHighPercent>-16744320</ColorHighPercent>
+						<ColorMean>-6632142</ColorMean>
+						<LineWidth>1</LineWidth>						
+						<Title><![CDATA[Распределение времени выполнения заказов, мин]]></Title>							
+					</HistogramDataExpression>
+    			</Histogram>
+				<EmbeddedObjectPresentation>
+					<Id>1766514097291</Id>
+					<Name><![CDATA[orderAnimationsStart_presentation]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<ScaleType>AUTOMATICALLY_CALCULATED</ScaleType>
+					<GISScaleForRealEmbeddedObjectPresentationSize>1000</GISScaleForRealEmbeddedObjectPresentationSize>
+					<GISScaleForFixedEmbeddedObjectPresentationSize>1000000000</GISScaleForFixedEmbeddedObjectPresentationSize>
+					<Latitude>56.83951263025168</Latitude>
+					<Longitude>60.61437868685321</Longitude>
+				</EmbeddedObjectPresentation>
 			</Presentation>
 
 				</Level>
@@ -1935,6 +2148,9 @@ import java.util.Optional;]]></Import>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[Order]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[null]]></Code>
+						</InitialValue>
 					</Properties>
 				</Variable>
 				<Variable Class="PlainVariable">
@@ -1947,6 +2163,9 @@ import java.util.Optional;]]></Import>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
 					</Properties>
 				</Variable>
 				<Variable Class="PlainVariable">
@@ -1959,6 +2178,9 @@ import java.util.Optional;]]></Import>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[int]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
 					</Properties>
 				</Variable>
 				<Variable Class="PlainVariable">
@@ -2027,7 +2249,7 @@ import java.util.Optional;]]></Import>
 					<Id>1762514372826</Id>
 					<Name><![CDATA[WaitForOrder]]></Name>
 					<X>300</X><Y>90</Y>
-					<Label><X>-5</X><Y>15</Y></Label>
+					<Label><X>5</X><Y>15</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
@@ -2046,7 +2268,6 @@ import java.util.Optional;]]></Import>
 					<Properties Width="100" Height="30">
 						<EntryAction><![CDATA[main.busyVehicles++;
 distanceToStart = distanceByRoute(order.start)/1000;
-order.startTime = time();
 moveTo(order.start);]]></EntryAction>
 						<ExitAction><![CDATA[main.emptyMileage += distanceToStart;]]></ExitAction>
 						<FillColor/>
@@ -2063,6 +2284,7 @@ moveTo(order.start);]]></EntryAction>
 					<Properties Width="100" Height="30">
 						<EntryAction><![CDATA[moveTo(order.finish)]]></EntryAction>
 						<ExitAction><![CDATA[main.busyVehicles--;
+
 //если автомобиль впервые выезжает на вызов и пассажир уже в машине,
 //то включаем автомобиль в подсчет статистики 
 //по кол-ву выполненных заказов на борт
@@ -2132,7 +2354,7 @@ if (!inWork) {
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1762516633958</Id>
-					<Name><![CDATA[transition]]></Name>
+					<Name><![CDATA[transitionToFinish]]></Name>
 					<X>350</X><Y>190</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -2144,8 +2366,12 @@ if (!inWork) {
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1762514452820" Target="1762516564205" Trigger="arrival">
-						<Action><![CDATA[Order orderAnimation = main.orderAnimationsStart.get(orderIndex);
-send("travel!", orderAnimation);]]></Action>
+						<Action><![CDATA[main.remove_orderAnimationsStart(order.imageStart);
+
+if (order.isHighestPriority){
+	main.reactionTimeFastTotal += (time() - order.startTime);
+	main.reactionTimeMedium = (double)main.reactionTimeFastTotal / main.priorityOrdersCount;
+}]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -2181,9 +2407,9 @@ send("travel!", orderAnimation);]]></Action>
 order.finishTime = time();
 order.duration = order.finishTime - order.startTime;
 main.allOrdersDuration += order.duration;
+main.orderDurationsDataset.add(order.duration); //для гистограммы
 main.mediumOrderDuration = main.allOrdersDuration / main.completedOrders;
 
-//OrderEnd orderAnimationEnd = main.orderAnimationsEnd.get(orderIndex);
 main.remove_orderAnimationsEnd(order.imageEnd);
 order = null;
 //считаем среднее кол-во выполненных заказов на борт
@@ -2252,7 +2478,8 @@ main.completedOrdersPerVehicle = (double)main.completedOrders/main.workingVehicl
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1762516979244" Target="1762514452820" Trigger="timeout">
-						<Action><![CDATA[getOrderFromPool();]]></Action>
+						<Action><![CDATA[System.out.println("Get order from pool!");
+getOrderFromPool();]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -2287,6 +2514,26 @@ orderIndex = 0;
 Order closestOrder = null;
 
 double reactionPriorityTime = time();
+if (order == null) System.out.println("order is null!");
+else {
+	closestOrder = main.orders.stream()
+	        .filter(order -> checkOrderCharacteristics(order, false))
+	        .min(Comparator.comparing(order -> distanceByRoute(order.start)))
+	        .get();
+	
+	if (closestOrder != null){
+		if (closestOrder.isHighestPriority) {
+			main.reactionTimeFastTotal += time() - reactionPriorityTime;
+			System.out.println(time() - reactionPriorityTime);
+			main.reactionTimeMedium = (double) main.reactionTimeFastTotal/main.workingVehicles;
+		}
+		orderIndex = main.orders.indexOf(closestOrder);
+		order = main.orders.remove(orderIndex);
+		send(order, this);
+	}
+}
+/*double reactionPriorityTime = time();
+System.out.println(reactionPriorityTime);
 
 // Получаем список заказов с высшим приоритетом
 List<Order> priorityOrders = main.orders.stream()
@@ -2306,15 +2553,16 @@ else {// Поиск заказа с минимальным расстояние�
         .min(Comparator.comparing(order -> distanceByRoute(order.start)))
         .get();
 }
-//если машина удовлетворяет требованиям заказа, берем найденынй заказ
+//если машина удовлетворяет требованиям заказа, берем найденный заказ
 if (closestOrder != null){
-	orderIndex = main.orders.indexOf(closestOrder);
-	order = main.orders.remove(orderIndex);
-	if (order.isHighestPriority) {
+	if (closestOrder.isHighestPriority) {
 		main.reactionTimeFastTotal += time() - reactionPriorityTime;
 		System.out.println(time() - reactionPriorityTime);
+		main.reactionTimeMedium = (double) main.reactionTimeFastTotal/main.workingVehicles;
 	}
-}]]></Body>
+	orderIndex = main.orders.indexOf(closestOrder);
+	order = main.orders.remove(orderIndex);
+}*/]]></Body>
 				</Function>
 				<Function AccessType="private" StaticFunction="false">
 					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
@@ -2459,6 +2707,29 @@ if (closestOrder != null){
 						<ImageResourceReference>
 							<PackageName><![CDATA[projectpractice]]></PackageName>
 							<ClassName><![CDATA[redCar.png]]></ClassName>
+						</ImageResourceReference>
+					</ImageFiles>
+					<OriginalSize>false</OriginalSize>
+				</Image>
+				<Image>
+					<Id>1766511778130</Id>
+					<Name><![CDATA[image3]]></Name>
+					<X>-10</X><Y>-20</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>false</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[hasChildSeat]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Width>15</Width>
+					<Height>15</Height>
+					<Rotation>0.0</Rotation>
+					<ImageFiles>
+						<ImageResourceReference>
+							<PackageName><![CDATA[projectpractice]]></PackageName>
+							<ClassName><![CDATA[baby.png]]></ClassName>
 						</ImageResourceReference>
 					</ImageFiles>
 					<OriginalSize>false</OriginalSize>
@@ -2760,7 +3031,7 @@ if (closestOrder != null){
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[Order]]></Type>
+						<Type><![CDATA[OrderStart]]></Type>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
@@ -2816,25 +3087,13 @@ if (closestOrder != null){
 				<StatechartElement Class="FinalState" ParentState="ROOT_NODE">
 					<Id>1763727016416</Id>
 					<Name><![CDATA[leaving]]></Name>
-					<X>280</X><Y>340</Y>
+					<X>280</X><Y>230</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties>	
 					</Properties>	
-				</StatechartElement>
-				<StatechartElement Class="State" ParentState="ROOT_NODE">
-					<Id>1764526789087</Id>
-					<Name><![CDATA[travelling]]></Name>
-					<X>230</X><Y>230</Y>
-					<Label><X>10</X><Y>10</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties Width="100" Height="30">
-						<FillColor/>
-					</Properties>
 				</StatechartElement>
 				<StatechartElement Class="FinalState" ParentState="ROOT_NODE">
 					<Id>1766481670431</Id>
@@ -2895,8 +3154,8 @@ if (closestOrder != null){
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1763727019665</Id>
-					<Name><![CDATA[transition1]]></Name>
+					<Id>1764526842254</Id>
+					<Name><![CDATA[transition2]]></Name>
 					<X>280</X><Y>160</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -2904,41 +3163,10 @@ if (closestOrder != null){
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>70</Y></Point>
+						<Point><X>0</X><Y>62</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
-					<Properties Source="1763726971975" Target="1764526789087" Trigger="message">
-						<Action><![CDATA[main.remove_orderAnimationsStart(imageStart);]]></Action>
-						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
-						</Timeout>
-						<Condition><![CDATA[true]]></Condition>
-						<Rate Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
-						</Rate>
-						<MessageType><![CDATA[String]]></MessageType>
-						<DefaultTransition>true</DefaultTransition>
-						<FilterType><![CDATA[equalsTo]]></FilterType>
-						<EqualsExpression><![CDATA["travel!"]]></EqualsExpression>
-						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
-					</Properties>	
-				</StatechartElement>
-				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1764526842254</Id>
-					<Name><![CDATA[transition2]]></Name>
-					<X>280</X><Y>260</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<Points>
-						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>72</Y></Point>
-					</Points>
-					<IconOffset>20.0</IconOffset>
-					<Properties Source="1764526789087" Target="1763727016416" Trigger="message">
+					<Properties Source="1763726971975" Target="1763727016416" Trigger="message">
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -2972,7 +3200,6 @@ if (closestOrder != null){
 						<Action><![CDATA[if (statechart.isStateActive(waiting))
 {
 	main.lostOrders +=1;
-	
 	main.remove_orderAnimationsStart(imageStart);
 	main.remove_orderAnimationsEnd(imageEnd);
 }]]></Action>
@@ -3056,7 +3283,7 @@ if (closestOrder != null){
 					<X>-5</X><Y>-30</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
+					<PresentationFlag>false</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
 					<EmbeddedIcon>false</EmbeddedIcon>
@@ -3761,6 +3988,513 @@ if (closestOrder != null){
 			</Presentation>
 
 		</ActiveObjectClass>
+		<!--   =========   Active Object Class   ========  -->
+		<ActiveObjectClass>
+			<Id>1766513794371</Id>
+			<Name><![CDATA[OrderStart]]></Name>
+			<Generic>false</Generic>
+			<GenericParameter>
+				<Id>1766513794366</Id>
+				<Name><![CDATA[1766513794366]]></Name>
+				<GenericParameterValue Class="CodeValue">
+					<Code><![CDATA[T extends Agent]]></Code>
+				</GenericParameterValue>
+				<GenericParameterLabel><![CDATA[Параметр настройки:]]></GenericParameterLabel>
+			</GenericParameter>
+			<FlowChartsUsage>ENTITY</FlowChartsUsage>
+			<SamplesToKeep>100</SamplesToKeep>
+			<LimitNumberOfArrayElements>false</LimitNumberOfArrayElements>
+			<ElementsLimitValue>100</ElementsLimitValue>
+			<MakeDefaultViewArea>true</MakeDefaultViewArea>
+			<SceneGridColor/>
+			<SceneBackgroundColor>-4144960</SceneBackgroundColor>
+			<SceneSkybox>null</SceneSkybox>
+			<AgentProperties>
+				<EnvironmentDefinesInitialLocation>true</EnvironmentDefinesInitialLocation>
+				<RotateAnimationTowardsMovement>true</RotateAnimationTowardsMovement>
+				<RotateAnimationVertically>false</RotateAnimationVertically>
+				<VelocityCode Class="CodeUnitValue">
+					<Code><![CDATA[10]]></Code>
+					<Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit>
+				</VelocityCode>
+				<PhysicalLength Class="CodeUnitValue">
+					<Code><![CDATA[1]]></Code>
+					<Unit Class="LengthUnits"><![CDATA[METER]]></Unit>
+				</PhysicalLength>
+				<PhysicalWidth Class="CodeUnitValue">
+					<Code><![CDATA[1]]></Code>
+					<Unit Class="LengthUnits"><![CDATA[METER]]></Unit>
+				</PhysicalWidth>
+				<PhysicalHeight Class="CodeUnitValue">
+					<Code><![CDATA[1]]></Code>
+					<Unit Class="LengthUnits"><![CDATA[METER]]></Unit>
+				</PhysicalHeight>
+			</AgentProperties>
+			<EnvironmentProperties>
+					<EnableSteps>false</EnableSteps>
+					<StepDurationCode Class="CodeUnitValue">
+						<Code><![CDATA[1.0]]></Code>
+						<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+					</StepDurationCode>
+					<SpaceType>CONTINUOUS</SpaceType>
+					<WidthCode><![CDATA[500]]></WidthCode>
+					<HeightCode><![CDATA[500]]></HeightCode>
+					<ZHeightCode><![CDATA[0]]></ZHeightCode>
+					<ColumnsCountCode><![CDATA[100]]></ColumnsCountCode>
+					<RowsCountCode><![CDATA[100]]></RowsCountCode>
+					<NeigborhoodType>MOORE</NeigborhoodType>
+					<LayoutType>USER_DEF</LayoutType>
+					<NetworkType>USER_DEF</NetworkType>
+					<ConnectionsPerAgentCode><![CDATA[2]]></ConnectionsPerAgentCode>
+					<ConnectionsRangeCode><![CDATA[50]]></ConnectionsRangeCode>
+					<NeighborLinkFractionCode><![CDATA[0.95]]></NeighborLinkFractionCode>
+					<MCode><![CDATA[10]]></MCode>
+			</EnvironmentProperties>
+			<DatasetsCreationProperties>
+				<AutoCreate>true</AutoCreate>
+					<Id>1766513794368</Id>
+					<OccurrenceAtTime>true</OccurrenceAtTime>
+					<OccurrenceDate>1762588800000</OccurrenceDate>
+					<OccurrenceTime Class="CodeUnitValue">
+						<Code><![CDATA[0]]></Code>
+						<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+					</OccurrenceTime>
+					<RecurrenceCode Class="CodeUnitValue">
+						<Code><![CDATA[1]]></Code>
+						<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+					</RecurrenceCode>
+			</DatasetsCreationProperties>
+			<ScaleRuler>
+				<Id>1766513794367</Id>
+				<Name><![CDATA[scale]]></Name>
+				<X>0</X><Y>-150</Y>
+				<PublicFlag>false</PublicFlag>
+				<PresentationFlag>false</PresentationFlag>
+				<ShowLabel>false</ShowLabel>
+				<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+				<Length>100</Length>
+				<Rotation>0</Rotation>
+				<ScaleType>BASED_ON_LENGTH</ScaleType>
+				<ModelLength>10</ModelLength>
+				<LengthUnits>METER</LengthUnits>
+				<Scale>10</Scale>
+				<InheritedFromParentAgentType>true</InheritedFromParentAgentType>
+			</ScaleRuler>
+			<CurrentLevel>1766513794373</CurrentLevel>
+			<ConnectionsId>1766513794439</ConnectionsId>
+			<Variables>
+				<Variable Class="Parameter">
+					<Id>1766513794401</Id>
+					<Name><![CDATA[start]]></Name>
+					<X>50</X><Y>50</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[Endpoint]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1766513794399</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1766513794405</Id>
+					<Name><![CDATA[finish]]></Name>
+					<X>50</X><Y>100</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[Endpoint]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1766513794403</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1766513794409</Id>
+					<Name><![CDATA[startTime]]></Name>
+					<X>50</X><Y>140</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[]]></Type>
+						<UnitType><![CDATA[TIME]]></UnitType>
+						<UnitOfValue Class="TimeUnits"><![CDATA[MINUTE]]></UnitOfValue>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeUnitValue">
+							<Code><![CDATA[]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1766513794407</Id>
+							<EditorContolType>UNIT_EDITOR</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1766513794413</Id>
+					<Name><![CDATA[finishTime]]></Name>
+					<X>50</X><Y>180</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[]]></Type>
+						<UnitType><![CDATA[TIME]]></UnitType>
+						<UnitOfValue Class="TimeUnits"><![CDATA[MINUTE]]></UnitOfValue>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeUnitValue">
+							<Code><![CDATA[]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1766513794411</Id>
+							<EditorContolType>UNIT_EDITOR</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1766513794417</Id>
+					<Name><![CDATA[duration]]></Name>
+					<X>50</X><Y>210</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[double]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<ParameterEditor>
+							<Id>1766513794415</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1766513794421</Id>
+					<Name><![CDATA[isHighestPriority]]></Name>
+					<X>50</X><Y>240</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[boolean]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[false]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1766513794419</Id>
+							<EditorContolType>CHECK_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1766513794425</Id>
+					<Name><![CDATA[isChildSeat]]></Name>
+					<X>50</X><Y>270</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[boolean]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[false]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1766513794423</Id>
+							<EditorContolType>CHECK_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+				<Variable Class="Parameter">
+					<Id>1766513794429</Id>
+					<Name><![CDATA[type]]></Name>
+					<X>50</X><Y>300</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[ServiceType]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[ServiceType.Econom]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1766513794427</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
+			</Variables>
+			<StatechartElements>
+				<StatechartElement Class="State" ParentState="ROOT_NODE">
+					<Id>1766513794381</Id>
+					<Name><![CDATA[waiting]]></Name>
+					<X>230</X><Y>90</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties Width="100" Height="70">
+						<FillColor/>
+					</Properties>
+				</StatechartElement>
+				<StatechartElement Class="FinalState" ParentState="ROOT_NODE">
+					<Id>1766513794383</Id>
+					<Name><![CDATA[leaving]]></Name>
+					<X>280</X><Y>230</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties>	
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="EntryPoint" ParentState="ROOT_NODE">
+					<Id>1766513794389</Id>
+					<Name><![CDATA[statechart]]></Name>
+					<X>270</X><Y>50</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>40</Y></Point>
+					</Points>
+					<Properties Target="1766513794381">
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="waiting" ParentStateId="1766513794381">
+					<Id>1766513794391</Id>
+					<Name><![CDATA[transition]]></Name>
+					<X>330</X><Y>120</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>-40</X><Y>0</Y></Point>
+						<Point><X>-40</X><Y>40</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1766513794381" Target="1766513794381" Trigger="message">
+						<Action><![CDATA[setLocation(msg);]]></Action>
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[True]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[Endpoint]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[unconditionally]]></FilterType>
+						<EqualsExpression><![CDATA[start = msg]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1766513794395</Id>
+					<Name><![CDATA[transition2]]></Name>
+					<X>280</X><Y>160</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>62</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1766513794381" Target="1766513794383" Trigger="message">
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[true]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[String]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[equalsTo]]></FilterType>
+						<EqualsExpression><![CDATA["leave!"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+			</StatechartElements>
+			<AgentLinks>
+				<AgentLink>
+					<Id>1766513794439</Id>
+					<Name><![CDATA[connections]]></Name>
+					<X>50</X><Y>-50</Y>
+					<Label><X>15</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<HandleReceiveInConnections>false</HandleReceiveInConnections>
+					<AgentLinkType>COLLECTION_OF_LINKS</AgentLinkType>
+					<AgentLinkBidirectional>true</AgentLinkBidirectional>
+					<MessageType><![CDATA[Object]]></MessageType>
+					<StatechartReference>
+						<PackageName><![CDATA[projectpractice]]></PackageName>
+						<ClassName><![CDATA[Order]]></ClassName>
+						<ItemName><![CDATA[statechart]]></ItemName>
+					</StatechartReference>
+					<LineStyle>SOLID</LineStyle>
+					<LineWidth>1</LineWidth>
+					<LineColor>-16777216</LineColor>
+					<LineZOrder>UNDER_AGENTS</LineZOrder>
+					<LineArrow>NONE</LineArrow>
+					<LineArrowPosition>END</LineArrowPosition>
+				</AgentLink>
+			</AgentLinks>
+
+			<ContainerLinks>
+				<ContainerLink>
+					<Id>1766514097292</Id>
+					<Name><![CDATA[main]]></Name>
+					<X>50</X><Y>-100</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ActiveObjectClass>
+						<PackageName><![CDATA[projectpractice]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+					</ActiveObjectClass>
+				</ContainerLink>
+			</ContainerLinks>
+
+			<Presentation>
+				<Level>
+					<Id>1766513794373</Id>
+					<Name><![CDATA[level]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<Z>0</Z>
+					<LevelVisibility>DIM_NON_CURRENT</LevelVisibility>
+
+			<Presentation>
+				<Image>
+					<Id>1766513794375</Id>
+					<Name><![CDATA[image]]></Name>
+					<X>-5</X><Y>-30</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>10</Z>
+					<Width>30</Width>
+					<Height>30</Height>
+					<Rotation>0.0</Rotation>
+					<ImageFiles>
+						<ImageResourceReference>
+							<PackageName><![CDATA[projectpractice]]></PackageName>
+							<ClassName><![CDATA[startPoint.png]]></ClassName>
+						</ImageResourceReference>
+					</ImageFiles>
+					<OriginalSize>false</OriginalSize>
+				</Image>
+				<Image>
+					<Id>1766513794377</Id>
+					<Name><![CDATA[image1]]></Name>
+					<X>0</X><Y>-35</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<VisibleCode><![CDATA[isHighestPriority]]></VisibleCode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Width>10</Width>
+					<Height>15</Height>
+					<Rotation>0.0</Rotation>
+					<ImageFiles>
+						<ImageResourceReference>
+							<PackageName><![CDATA[projectpractice]]></PackageName>
+							<ClassName><![CDATA[flash.png]]></ClassName>
+						</ImageResourceReference>
+					</ImageFiles>
+					<OriginalSize>false</OriginalSize>
+				</Image>
+			</Presentation>
+
+				</Level>
+				<Level>
+					<Id>1766513794379</Id>
+					<Name><![CDATA[level1]]></Name>
+					<X>0</X><Y>0</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<Z>0</Z>
+					<LevelVisibility>DIM_NON_CURRENT</LevelVisibility>
+
+
+				</Level>
+			</Presentation>
+
+		</ActiveObjectClass>
 	</ActiveObjectClasses>
 	<DifferentialEquationsMethod>EULER</DifferentialEquationsMethod>
 	<MixedEquationsMethod>RK45_NEWTON</MixedEquationsMethod>
@@ -3963,6 +4697,18 @@ if (closestOrder != null){
 		<Resource>
 			<Id>1764941416842</Id>
 			<Path><![CDATA[lombok-1.18.42.jar]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+		<Resource>
+			<Id>1766511742281</Id>
+			<Path><![CDATA[baby.png]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+		<Resource>
+			<Id>1766511900813</Id>
+			<Path><![CDATA[flash.png]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 			<Location>FILE_SYSTEM</Location>
 		</Resource>
