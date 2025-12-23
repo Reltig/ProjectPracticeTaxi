@@ -242,7 +242,7 @@ prepare();]]></StartupCode>
 					<Id>1766482100220</Id>
 					<Name><![CDATA[waitingTime]]></Name>
 					<Description><![CDATA[кол-во свободных машин]]></Description>
-					<X>-380</X><Y>200</Y>
+					<X>-380</X><Y>250</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -258,7 +258,7 @@ prepare();]]></StartupCode>
 					<Id>1766482242042</Id>
 					<Name><![CDATA[carsCount]]></Name>
 					<Description><![CDATA[кол-во свободных машин]]></Description>
-					<X>-380</X><Y>230</Y>
+					<X>-380</X><Y>280</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -266,7 +266,7 @@ prepare();]]></StartupCode>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[int]]></Type>        
 						<InitialValue Class="CodeValue">
-							<Code><![CDATA[100]]></Code>
+							<Code><![CDATA[10]]></Code>
 						</InitialValue>
 					</Properties>
 				</Variable>
@@ -454,10 +454,13 @@ order.startTime = time();
 OrderStart orderAnimationStart = add_orderAnimationsStart();
 order.imageStart = orderAnimationStart;
 orderAnimationStart.isHighestPriority = order.isHighestPriority; 
-send(start, orderAnimationStart);
 
 OrderEnd orderAnimationEnd = add_orderAnimationsEnd();
 order.imageEnd = orderAnimationEnd;
+
+orderAnimationStart.imageEnd = orderAnimationEnd;
+
+send(start, orderAnimationStart);
 send(finish, orderAnimationEnd);
 
 schedule(order);]]></Action>
@@ -587,7 +590,7 @@ return c;]]></Body>
     			<HistogramData>
 					<Id>1766511043124</Id>
 					<Name><![CDATA[orderDurationsDataset]]></Name>
-					<X>-170</X><Y>330</Y>
+					<X>-380</X><Y>170</Y>
 					<Label><X>15</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -789,84 +792,6 @@ return c;]]></Body>
 					</QuantityColumn>
 				</EmbeddedObject>
 				<EmbeddedObject>
-					<Id>1763576946462</Id>
-					<Name><![CDATA[orderAnimationsStart1]]></Name>
-					<X>-410</X><Y>610</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<PresentationId>1763576949053</PresentationId>
-					<ActiveObjectClass>
-						<PackageName><![CDATA[projectpractice]]></PackageName>
-						<ClassName><![CDATA[Order]]></ClassName>
-					</ActiveObjectClass>
-					<GenericParameterSubstitute>
-						<GenericParameterSubstituteReference>
-							<PackageName><![CDATA[projectpractice]]></PackageName>
-							<ClassName><![CDATA[Order]]></ClassName>
-							<ItemName><![CDATA[1762512330819]]></ItemName>
-						</GenericParameterSubstituteReference>
-					</GenericParameterSubstitute>
-					<Parameters>
-						<Parameter>
-							<Name><![CDATA[start]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[finish]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[startTime]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[finishTime]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[duration]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[isHighestPriority]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[isChildSeat]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[type]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[imageStart]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[imageEnd]]></Name>
-						</Parameter>
-					</Parameters>
-					<ReplicationFlag>true</ReplicationFlag>
-					<Replication Class="CodeValue">
-						<Code><![CDATA[100]]></Code>
-					</Replication>
-					<CollectionType>ARRAY_LIST_BASED</CollectionType>
-					<InEnvironment>true</InEnvironment>
-					<InitialLocationType>XYZ</InitialLocationType>
-					<ColumnCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</ColumnCode>
-					<RowCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</RowCode>
-					<LocationNameCode Class="CodeValue">
-						<Code><![CDATA[""]]></Code>
-					</LocationNameCode>
-					<InitializationType>EMPTY</InitializationType>
-					<InitializationDatabaseTableQuery>
-						<Id>1763576946460</Id>
-						<TableReference>
-						</TableReference>
-					</InitializationDatabaseTableQuery>
-					<InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType>
-					<QuantityColumn>
-					</QuantityColumn>
-				</EmbeddedObject>
-				<EmbeddedObject>
 					<Id>1764530821777</Id>
 					<Name><![CDATA[orderAnimationsEnd]]></Name>
 					<X>-170</X><Y>270</Y>
@@ -982,6 +907,9 @@ return c;]]></Body>
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[type]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[imageEnd]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -1203,7 +1131,7 @@ return c;]]></Body>
 					<LineColor>-14774017</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<Width>440</Width>
+					<Width>400</Width>
 					<Height>560</Height>
 					<Rotation>0.0</Rotation>
 					<FillColor>-1</FillColor>
@@ -1275,24 +1203,6 @@ return c;]]></Body>
 					</Font>
 					<Alignment>LEFT</Alignment>
 				</Text>
-				<EmbeddedObjectPresentation>
-					<Id>1763576949053</Id>
-					<Name><![CDATA[orderAnimationsStart1_presentation]]></Name>
-					<X>0</X><Y>0</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<ScaleType>AUTOMATICALLY_CALCULATED</ScaleType>
-					<GISScaleForRealEmbeddedObjectPresentationSize>1000</GISScaleForRealEmbeddedObjectPresentationSize>
-					<GISScaleForFixedEmbeddedObjectPresentationSize>1000000000</GISScaleForFixedEmbeddedObjectPresentationSize>
-					<Latitude>56.820210431155225</Latitude>
-					<Longitude>60.55384124182009</Longitude>
-				</EmbeddedObjectPresentation>
 				<Text>
 					<Id>1764338660994</Id>
 					<Name><![CDATA[text3]]></Name>
@@ -1358,7 +1268,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766482113356</Id>
 					<Name><![CDATA[text5]]></Name>
-					<X>-390</X><Y>160</Y>
+					<X>-390</X><Y>210</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1380,7 +1290,7 @@ return c;]]></Body>
 				 	<EmbeddedIcon>false</EmbeddedIcon>				
 					<Id>1766482621914</Id>
 					<Name><![CDATA[carsCountSlider]]></Name>
-					<X>20</X><Y>280</Y>
+					<X>20</X><Y>300</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1393,7 +1303,7 @@ return c;]]></Body>
 					<ExtendedProperties>
 						<DefaultValueCode><![CDATA[0]]></DefaultValueCode>
 						<Orientation>HORIZONTAL</Orientation>
-						<MinValue><![CDATA[100]]></MinValue>
+						<MinValue><![CDATA[2]]></MinValue>
 						<MaxValue><![CDATA[2100]]></MaxValue>
 						<LinkTo>true</LinkTo>
 						<Link>carsCount</Link>
@@ -1403,7 +1313,7 @@ return c;]]></Body>
 				 	<EmbeddedIcon>false</EmbeddedIcon>				
 					<Id>1766482739328</Id>
 					<Name><![CDATA[waitingTimeSlider]]></Name>
-					<X>170</X><Y>280</Y>
+					<X>170</X><Y>300</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1426,7 +1336,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766482826416</Id>
 					<Name><![CDATA[text6]]></Name>
-					<X>20</X><Y>250</Y>
+					<X>20</X><Y>270</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1447,7 +1357,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766482847153</Id>
 					<Name><![CDATA[text7]]></Name>
-					<X>160</X><Y>250</Y>
+					<X>160</X><Y>270</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1500,8 +1410,9 @@ return c;]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
-					<Text><![CDATA[Среднее время реакции на срочный заказ]]></Text>
-					<TextCode><![CDATA[String.format("Среднее время реакции на срочный заказ: %.1f мин", reactionTimeMedium)]]></TextCode>
+					<Text><![CDATA[Среднее время реакции 
+на срочный заказ]]></Text>
+					<TextCode><![CDATA[String.format("Среднее время реакции \nна срочный заказ: %.1f мин", reactionTimeMedium)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>16</Size>
@@ -1534,7 +1445,7 @@ return c;]]></Body>
     			<Histogram>
 					<Id>1766511055136</Id>
 					<Name><![CDATA[chart]]></Name>
-					<X>0</X><Y>330</Y>
+					<X>10</X><Y>340</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2306,6 +2217,18 @@ if (!inWork) {
 					<Properties>	
 					</Properties>	
 				</StatechartElement>
+				<StatechartElement Class="State" ParentState="ROOT_NODE">
+					<Id>1766521990780</Id>
+					<Name><![CDATA[noOrder]]></Name>
+					<X>440</X><Y>170</Y>
+					<Label><X>10</X><Y>10</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties Width="100" Height="30">
+						<FillColor/>
+					</Properties>
+				</StatechartElement>
 				<StatechartElement Class="EntryPoint" ParentState="ROOT_NODE">
 					<Id>1762254996417</Id>
 					<Name><![CDATA[statechart]]></Name>
@@ -2366,11 +2289,13 @@ if (!inWork) {
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1762514452820" Target="1762516564205" Trigger="arrival">
-						<Action><![CDATA[main.remove_orderAnimationsStart(order.imageStart);
-
-if (order.isHighestPriority){
-	main.reactionTimeFastTotal += (time() - order.startTime);
-	main.reactionTimeMedium = (double)main.reactionTimeFastTotal / main.priorityOrdersCount;
+						<Action><![CDATA[if (order != null) {
+	main.remove_orderAnimationsStart(order.imageStart);
+	
+	if (order.isHighestPriority){
+		main.reactionTimeFastTotal += (time() - order.startTime);
+		main.reactionTimeMedium = (double)main.reactionTimeFastTotal / main.priorityOrdersCount;
+	}
 }]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
@@ -2464,7 +2389,7 @@ main.completedOrdersPerVehicle = (double)main.completedOrders/main.workingVehicl
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1762517047240</Id>
-					<Name><![CDATA[transition4]]></Name>
+					<Name><![CDATA[transitionToGetFromPool]]></Name>
 					<X>362</X><Y>310</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -2472,19 +2397,79 @@ main.completedOrdersPerVehicle = (double)main.completedOrders/main.workingVehicl
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>58</X><Y>0</Y></Point>
-						<Point><X>58</X><Y>-140</Y></Point>
-						<Point><X>38</X><Y>-140</Y></Point>
+						<Point><X>136</X><Y>0</Y></Point>
+						<Point><X>138</X><Y>-70</Y></Point>
+						<Point><X>136</X><Y>-110</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
-					<Properties Source="1762516979244" Target="1762514452820" Trigger="timeout">
-						<Action><![CDATA[System.out.println("Get order from pool!");
-getOrderFromPool();]]></Action>
+					<Properties Source="1762516979244" Target="1766521990780" Trigger="timeout">
+						<Action><![CDATA[getOrderFromPool();]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</Timeout>
 						<Condition><![CDATA[true]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[Object]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[unconditionally]]></FilterType>
+						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1766522062548</Id>
+					<Name><![CDATA[transition]]></Name>
+					<X>490</X><Y>170</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>-10</X><Y>-60</Y></Point>
+						<Point><X>-90</X><Y>-60</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1766521990780" Target="1762514372826" Trigger="condition">
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[order == null]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[Object]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[unconditionally]]></FilterType>
+						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1766522090311</Id>
+					<Name><![CDATA[transition4]]></Name>
+					<X>440</X><Y>190</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>-40</X><Y>-10</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1766521990780" Target="1762514452820" Trigger="condition">
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[order != null]]></Condition>
 						<Rate Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
@@ -2513,28 +2498,6 @@ int i = 0;
 orderIndex = 0;
 Order closestOrder = null;
 
-double reactionPriorityTime = time();
-if (order == null) System.out.println("order is null!");
-else {
-	closestOrder = main.orders.stream()
-	        .filter(order -> checkOrderCharacteristics(order, false))
-	        .min(Comparator.comparing(order -> distanceByRoute(order.start)))
-	        .get();
-	
-	if (closestOrder != null){
-		if (closestOrder.isHighestPriority) {
-			main.reactionTimeFastTotal += time() - reactionPriorityTime;
-			System.out.println(time() - reactionPriorityTime);
-			main.reactionTimeMedium = (double) main.reactionTimeFastTotal/main.workingVehicles;
-		}
-		orderIndex = main.orders.indexOf(closestOrder);
-		order = main.orders.remove(orderIndex);
-		send(order, this);
-	}
-}
-/*double reactionPriorityTime = time();
-System.out.println(reactionPriorityTime);
-
 // Получаем список заказов с высшим приоритетом
 List<Order> priorityOrders = main.orders.stream()
     .filter(o -> checkOrderCharacteristics(o, true))
@@ -2542,27 +2505,30 @@ List<Order> priorityOrders = main.orders.stream()
 
 if (priorityOrders.size() > 0) {
     // Поиск заказа с минимальным расстоянием среди приоритетных
-   closestOrder = priorityOrders.stream()
-        .min(Comparator.comparing(order -> distanceByRoute(order.start)))
-        .get();
-   
+   for (Order o: main.orders) {
+		double newDistance = this.distanceTo(o.start.getLatitude(), o.start.getLongitude());
+		if (newDistance < minDistance){
+			minDistance = newDistance;
+			closestOrder = o;
+		}
+	}
 }
 else {// Поиск заказа с минимальным расстоянием среди неприоритетных (false)
-    closestOrder = main.orders.stream()
-        .filter(order -> checkOrderCharacteristics(order, false))
-        .min(Comparator.comparing(order -> distanceByRoute(order.start)))
-        .get();
-}
-//если машина удовлетворяет требованиям заказа, берем найденный заказ
-if (closestOrder != null){
-	if (closestOrder.isHighestPriority) {
-		main.reactionTimeFastTotal += time() - reactionPriorityTime;
-		System.out.println(time() - reactionPriorityTime);
-		main.reactionTimeMedium = (double) main.reactionTimeFastTotal/main.workingVehicles;
+	for (Order o: main.orders) {
+		if (!checkOrderCharacteristics(o, false)) continue;
+		double newDistance = this.distanceTo(o.start.getLatitude(), o.start.getLongitude());
+		if (newDistance < minDistance){
+			minDistance = newDistance;
+			closestOrder = o;
+		}
 	}
+}
+if (closestOrder != null){
 	orderIndex = main.orders.indexOf(closestOrder);
-	order = main.orders.remove(orderIndex);
-}*/]]></Body>
+	main.orders.remove(orderIndex);
+	order = closestOrder;
+	send(order, this);
+}]]></Body>
 				</Function>
 				<Function AccessType="private" StaticFunction="false">
 					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
@@ -3095,17 +3061,6 @@ if (closestOrder != null){
 					<Properties>	
 					</Properties>	
 				</StatechartElement>
-				<StatechartElement Class="FinalState" ParentState="ROOT_NODE">
-					<Id>1766481670431</Id>
-					<Name><![CDATA[lost]]></Name>
-					<X>390</X><Y>150</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties>	
-					</Properties>	
-				</StatechartElement>
 				<StatechartElement Class="EntryPoint" ParentState="ROOT_NODE">
 					<Id>1763726969816</Id>
 					<Name><![CDATA[statechart]]></Name>
@@ -3183,42 +3138,6 @@ if (closestOrder != null){
 						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
 					</Properties>	
 				</StatechartElement>
-				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1766481681574</Id>
-					<Name><![CDATA[transitionLost]]></Name>
-					<X>330</X><Y>150</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<Points>
-						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>52</X><Y>0</Y></Point>
-					</Points>
-					<IconOffset>20.0</IconOffset>
-					<Properties Source="1763726971975" Target="1766481670431" Trigger="timeout">
-						<Action><![CDATA[if (statechart.isStateActive(waiting))
-{
-	main.lostOrders +=1;
-	main.remove_orderAnimationsStart(imageStart);
-	main.remove_orderAnimationsEnd(imageEnd);
-}]]></Action>
-						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[main.waitingTime]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
-						</Timeout>
-						<Condition><![CDATA[true]]></Condition>
-						<Rate Class="CodeUnitValue">
-							<Code><![CDATA[15]]></Code>
-							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
-						</Rate>
-						<MessageType><![CDATA[Object]]></MessageType>
-						<DefaultTransition>true</DefaultTransition>
-						<FilterType><![CDATA[unconditionally]]></FilterType>
-						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
-						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
-					</Properties>	
-				</StatechartElement>
 			</StatechartElements>
 			<AgentLinks>
 				<AgentLink>
@@ -3247,21 +3166,6 @@ if (closestOrder != null){
 				</AgentLink>
 			</AgentLinks>
 
-			<ContainerLinks>
-				<ContainerLink>
-					<Id>1763576949061</Id>
-					<Name><![CDATA[main]]></Name>
-					<X>50</X><Y>-100</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<ActiveObjectClass>
-						<PackageName><![CDATA[projectpractice]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
-					</ActiveObjectClass>
-				</ContainerLink>
-			</ContainerLinks>
 
 			<Presentation>
 				<Level>
@@ -4270,6 +4174,30 @@ if (closestOrder != null){
 						</ParameterEditor>
 					</Properties>                 
 				</Variable>
+				<Variable Class="Parameter">
+					<Id>1766522734257</Id>
+					<Name><![CDATA[imageEnd]]></Name>
+					<X>50</X><Y>330</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[OrderEnd]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[null]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1766522734255</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
 			</Variables>
 			<StatechartElements>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
@@ -4288,6 +4216,17 @@ if (closestOrder != null){
 					<Id>1766513794383</Id>
 					<Name><![CDATA[leaving]]></Name>
 					<X>280</X><Y>230</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties>	
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="FinalState" ParentState="ROOT_NODE">
+					<Id>1766522415801</Id>
+					<Name><![CDATA[lostImage]]></Name>
+					<X>410</X><Y>150</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4369,6 +4308,40 @@ if (closestOrder != null){
 						<DefaultTransition>true</DefaultTransition>
 						<FilterType><![CDATA[equalsTo]]></FilterType>
 						<EqualsExpression><![CDATA["leave!"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1766522418153</Id>
+					<Name><![CDATA[transition1]]></Name>
+					<X>330</X><Y>150</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>72</X><Y>0</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1766513794381" Target="1766522415801" Trigger="timeout">
+						<Action><![CDATA[main.lostOrders +=1;
+main.remove_orderAnimationsEnd(imageEnd);
+main.remove_orderAnimationsStart(this);]]></Action>
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[main.waitingTime]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[true]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
+						</Rate>
+						<Guard><![CDATA[statechart.isStateActive(waiting)]]></Guard>
+						<MessageType><![CDATA[Object]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[unconditionally]]></FilterType>
+						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
 						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
 					</Properties>	
 				</StatechartElement>
