@@ -398,11 +398,15 @@ try {
     e.printStackTrace();
 }
 
-double xStep = (topRight.getLongitude()-center.getLongitude())/horizontalNodes;
-double yStep = (bottomLeft.getLatitude()-center.getLatitude())/verticalNodes;
-for(int i = 0; i < horizontalNodes; i++) {
-	for(int j = 0; j < verticalNodes; j++) {
-		Point2 newPos = new Point2(center.getLongitude() + xStep*i, center.getLatitude() + yStep*j);
+double xStep = (topRight.getLongitude()-center.getLongitude())/horizontalNodes
+	+ (bottomLeft.getLongitude()-center.getLongitude())/verticalNodes;
+double yStep = (bottomLeft.getLatitude()-center.getLatitude())/verticalNodes
+ 	+ (topRight.getLatitude()-center.getLatitude())/horizontalNodes;
+Point2 d1 = new Point2((topRight.getLatitude()-center.getLatitude())/verticalNodes, (topRight.getLongitude()-center.getLongitude())/verticalNodes);
+Point2 d2 = new Point2((bottomLeft.getLatitude()-center.getLatitude())/horizontalNodes, (bottomLeft.getLongitude()-center.getLongitude())/horizontalNodes);
+for(int i = 0; i < horizontalNodes + 1; i++) {
+	for(int j = 0; j < verticalNodes + 1; j++) {
+		Point2 newPos = new Point2(center.getLatitude() + d1.x * j + d2.x * i, center.getLongitude()  + d1.y * j + d2.y * i);
 		boolean pointInPolygons = false;
 		int k = 0;
 		while ((k <= polygons.size()-1) && (pointInPolygons = pointInPolygon(polygons.get(k++), newPos))){
@@ -411,7 +415,7 @@ for(int i = 0; i < horizontalNodes; i++) {
 		if (pointInPolygons)
 		 continue;
 		Endpoint e = add_endpoints();
-		e.setXY(newPos.y, newPos.x);
+		e.setXY(newPos.x, newPos.y);
 		//e.moveTo(newPos.x, newPos.y);
 	}
 }]]></Body>
@@ -511,7 +515,7 @@ return c;]]></Body>
 					<LocationNameCode Class="CodeValue">
 						<Code><![CDATA[""]]></Code>
 					</LocationNameCode>
-					<InitializationType>LOAD_FROM_DATABASE</InitializationType>
+					<InitializationType>EMPTY</InitializationType>
 					<InitializationDatabaseTableQuery>
 						<Id>1762253809722</Id>
 						<TableReference>
@@ -889,8 +893,8 @@ return c;]]></Body>
 					<LineWidth>1</LineWidth>
 					<LineStyle>SOLID</LineStyle>
 					<ReadOnly>false</ReadOnly>
-					<Latitude>56.80691091279648</Latitude>	
-					<Longitude>60.55452760741003</Longitude>
+					<Latitude>56.8150264345035</Latitude>	
+					<Longitude>60.55837125471373</Longitude>
 					<Radius>3</Radius>
 					<FillColor>2144175423</FillColor>
 				</GISPoint>
@@ -3452,30 +3456,6 @@ order = main.orders.remove(orderIndex);]]></Body>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 			<Location>FILE_SYSTEM</Location>
 		</Resource>
-		<Resource>
-			<Id>1764860623268</Id>
-			<Path><![CDATA[jackson-annotations-2.20.jar]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-			<Location>FILE_SYSTEM</Location>
-		</Resource>
-		<Resource>
-			<Id>1764860624098</Id>
-			<Path><![CDATA[jackson-core-2.20.0.jar]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-			<Location>FILE_SYSTEM</Location>
-		</Resource>
-		<Resource>
-			<Id>1764860624867</Id>
-			<Path><![CDATA[jackson-databind-2.20.0.jar]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-			<Location>FILE_SYSTEM</Location>
-		</Resource>
-		<Resource>
-			<Id>1764941416842</Id>
-			<Path><![CDATA[lombok-1.18.42.jar]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-			<Location>FILE_SYSTEM</Location>
-		</Resource>
 	</ModelResources>
     <RequiredLibraryReference>
 		<LibraryName><![CDATA[com.anylogic.libraries.modules.markup_descriptors]]></LibraryName>
@@ -3495,38 +3475,6 @@ order = main.orders.remove(orderIndex);]]></Body>
 		<VersionMinor>0</VersionMinor>
 		<VersionBuild>5</VersionBuild>
     </RequiredLibraryReference>
-	<ClassPathEntry>
-		<ResourceReference>
-			<PackageName><![CDATA[projectpractice]]></PackageName>
-			<ClassName><![CDATA[jackson-annotations-2.20.jar]]></ClassName>
-		</ResourceReference>
-		<Imported>true</Imported>
-		<Folder>false</Folder>
-	</ClassPathEntry>
-	<ClassPathEntry>
-		<ResourceReference>
-			<PackageName><![CDATA[projectpractice]]></PackageName>
-			<ClassName><![CDATA[jackson-core-2.20.0.jar]]></ClassName>
-		</ResourceReference>
-		<Imported>true</Imported>
-		<Folder>false</Folder>
-	</ClassPathEntry>
-	<ClassPathEntry>
-		<ResourceReference>
-			<PackageName><![CDATA[projectpractice]]></PackageName>
-			<ClassName><![CDATA[jackson-databind-2.20.0.jar]]></ClassName>
-		</ResourceReference>
-		<Imported>true</Imported>
-		<Folder>false</Folder>
-	</ClassPathEntry>
-	<ClassPathEntry>
-		<ResourceReference>
-			<PackageName><![CDATA[projectpractice]]></PackageName>
-			<ClassName><![CDATA[lombok-1.18.42.jar]]></ClassName>
-		</ResourceReference>
-		<Imported>true</Imported>
-		<Folder>false</Folder>
-	</ClassPathEntry>
 </Model>
 <ConvertersApplied>
 	<Uuid>9f7858c9-b2c8-4ead-9244-fd08833f642b</Uuid>
