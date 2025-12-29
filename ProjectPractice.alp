@@ -370,7 +370,7 @@ prepare();]]></StartupCode>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[int]]></Type>
+						<Type><![CDATA[double]]></Type>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<ParameterEditor>
@@ -392,7 +392,7 @@ prepare();]]></StartupCode>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[int]]></Type>
+						<Type><![CDATA[double]]></Type>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<ParameterEditor>
@@ -407,14 +407,14 @@ prepare();]]></StartupCode>
 				</Variable>
 				<Variable Class="Parameter">
 					<Id>1767010175498</Id>
-					<Name><![CDATA[carSpeed]]></Name>
+					<Name><![CDATA[carsSpeed]]></Name>
 					<X>-380</X><Y>310</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
-						<Type><![CDATA[int]]></Type>
+						<Type><![CDATA[double]]></Type>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<ParameterEditor>
@@ -878,12 +878,12 @@ return c;]]></Body>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
 					<Replication Class="CodeValue">
-						<Code><![CDATA[carsCount]]></Code>
+						<Code><![CDATA[(int)carsCount]]></Code>
 					</Replication>
 					<CollectionType>ARRAY_LIST_BASED</CollectionType>
 					<InEnvironment>true</InEnvironment>
 					<InitialSpeedCode Class="CodeUnitValue">
-						<Code><![CDATA[carSpeed]]></Code>
+						<Code><![CDATA[carsSpeed]]></Code>
 						<Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit>
 					</InitialSpeedCode>
 					<InitialLocationType>NODE</InitialLocationType>
@@ -1731,8 +1731,8 @@ return c;]]></Body>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</OccurrenceTime>
 						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							<Code><![CDATA[2]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
@@ -1793,8 +1793,8 @@ return c;]]></Body>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</OccurrenceTime>
 						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+							<Code><![CDATA[2]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[HOUR]]></Unit>
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
@@ -4971,7 +4971,7 @@ main.remove_orderAnimationsStart(this);]]></Action>
 					<ParameterName><![CDATA[carsCount]]></ParameterName>
 				</Parameter>
 				<Parameter>
-					<ParameterName><![CDATA[carSpeed]]></ParameterName>
+					<ParameterName><![CDATA[carsSpeed]]></ParameterName>
 				</Parameter>
 			</Parameters>
 			<PresentationProperties>
@@ -5023,11 +5023,11 @@ chart2.addDataSet( root.durationStats, "Run " + numberOfRuns, color, true, Chart
 				<Variable Class="PlainVariable">
 					<Id>1767010765266</Id>
 					<Name><![CDATA[waitingTime]]></Name>
-					<X>-350</X><Y>145</Y>
+					<X>-350</X><Y>180</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>false</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
+					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[double]]></Type>        
 					</Properties>
@@ -5039,7 +5039,7 @@ chart2.addDataSet( root.durationStats, "Run " + numberOfRuns, color, true, Chart
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>false</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
+					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[double]]></Type>        
 					</Properties>
@@ -5051,7 +5051,7 @@ chart2.addDataSet( root.durationStats, "Run " + numberOfRuns, color, true, Chart
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>false</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
+					<ShowLabel>true</ShowLabel>
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[double]]></Type>        
 					</Properties>
@@ -5840,7 +5840,7 @@ edit_carsSpeed.setValue( (Double) values[2], true );
 					</ParameterValue>
 				</Parameter>
 				<Parameter>
-					<ParameterName><![CDATA[carSpeed]]></ParameterName>
+					<ParameterName><![CDATA[carsSpeed]]></ParameterName>
 					<ParameterValue Class="CodeValue">
 						<Code><![CDATA[carsSpeed]]></Code>
 					</ParameterValue>
@@ -5862,8 +5862,8 @@ edit_carsSpeed.setValue( (Double) values[2], true );
 				<StopOption><![CDATA[Stop at specified date]]></StopOption>
 				<InitialDate><![CDATA[1762214400000]]></InitialDate>	
 				<InitialTime><![CDATA[0.0]]></InitialTime>	
-				<FinalDate><![CDATA[1763078400000]]></FinalDate>	
-				<FinalTime><![CDATA[14400.0]]></FinalTime>	
+				<FinalDate><![CDATA[1762221600000]]></FinalDate>	
+				<FinalTime><![CDATA[120.0]]></FinalTime>	
 			</ModelTimeProperties>
 		</CompareRunsExperiment>
 	</Experiments>
