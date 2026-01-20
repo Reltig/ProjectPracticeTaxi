@@ -373,6 +373,9 @@ prepare();]]></StartupCode>
 						<Type><![CDATA[double]]></Type>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[20]]></Code>
+						</DefaultValue>
 						<ParameterEditor>
 							<Id>1767010137728</Id>
 							<Label><![CDATA[Макс. время ожидания такси]]></Label>
@@ -395,6 +398,9 @@ prepare();]]></StartupCode>
 						<Type><![CDATA[double]]></Type>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[700]]></Code>
+						</DefaultValue>
 						<ParameterEditor>
 							<Id>1767010160166</Id>
 							<Label><![CDATA[Количество водителей]]></Label>
@@ -417,6 +423,9 @@ prepare();]]></StartupCode>
 						<Type><![CDATA[double]]></Type>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[20]]></Code>
+						</DefaultValue>
 						<ParameterEditor>
 							<Id>1767010175496</Id>
 							<Label><![CDATA[Скорость автомобилей]]></Label>
@@ -452,14 +461,14 @@ prepare();]]></StartupCode>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties TriggerType="timeout" Mode="cyclic">
+					<Properties TriggerType="rate" Mode="cyclic">
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</Timeout>
 						<Rate Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
+							<Code><![CDATA[1500]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_HOUR]]></Unit>
 						</Rate>
 						<Id>1762515203136</Id>
 						<OccurrenceAtTime>true</OccurrenceAtTime>
@@ -2568,7 +2577,8 @@ moveTo(order.start);]]></EntryAction>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties Width="100" Height="30">
-						<EntryAction><![CDATA[moveTo(order.finish)]]></EntryAction>
+						<EntryAction><![CDATA[setSpeed(distanceByRoute(order.finish)/(uniform(4, 120)*1000/60), SpeedUnits.KPH);
+moveTo(order.finish)]]></EntryAction>
 						<ExitAction><![CDATA[main.busyVehicles--;
 
 //если автомобиль впервые выезжает на вызов и пассажир уже в машине,
@@ -2590,6 +2600,7 @@ if (!inWork) {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Properties>	
+						<Action><![CDATA[setSpeed(main.carsSpeed);]]></Action>
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
@@ -3064,8 +3075,8 @@ if (closestOrder != null){
 					<VisibleCode><![CDATA[hasChildSeat]]></VisibleCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
-					<Width>15</Width>
-					<Height>15</Height>
+					<Width>14</Width>
+					<Height>14</Height>
 					<Rotation>0.0</Rotation>
 					<ImageFiles>
 						<ImageResourceReference>
@@ -4812,8 +4823,8 @@ main.remove_orderAnimationsStart(this);]]></Action>
 					<VisibleCode><![CDATA[isHighestPriority]]></VisibleCode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Z>0</Z>
-					<Width>10</Width>
-					<Height>15</Height>
+					<Width>17.181</Width>
+					<Height>25</Height>
 					<Rotation>0.0</Rotation>
 					<ImageFiles>
 						<ImageResourceReference>
@@ -4929,7 +4940,7 @@ main.remove_orderAnimationsStart(this);]]></Action>
 			<Id>1762251615709</Id>
 			<Name><![CDATA[Simulation]]></Name>
 			<CommandLineArguments><![CDATA[]]></CommandLineArguments>
-			<MaximumMemory>512</MaximumMemory>
+			<MaximumMemory>4096</MaximumMemory>
 			<RandomNumberGenerationType>fixedSeed</RandomNumberGenerationType>
 			<CustomGeneratorCode>new Random()</CustomGeneratorCode>
 			<SeedValue>1</SeedValue>
@@ -4980,14 +4991,14 @@ main.remove_orderAnimationsStart(this);]]></Action>
 			</Parameters>
 			<PresentationProperties>
 				<EnableZoomAndPanning>true</EnableZoomAndPanning>
-				<ExecutionMode><![CDATA[virtualTime]]></ExecutionMode>
+				<ExecutionMode><![CDATA[realTimeScaled]]></ExecutionMode>
 				<Title><![CDATA[ProjectPractice : Simulation]]></Title>
 				<EnableDeveloperPanel>true</EnableDeveloperPanel>
 				<ShowDeveloperPanelOnStart>false</ShowDeveloperPanelOnStart>
 				<RealTimeScale>1.0</RealTimeScale>
 			</PresentationProperties>
 			<ModelTimeProperties>
-				<StopOption><![CDATA[Stop at specified date]]></StopOption>
+				<StopOption><![CDATA[Stop at specified time]]></StopOption>
 				<InitialDate><![CDATA[1762214400000]]></InitialDate>
 				<InitialTime><![CDATA[0.0]]></InitialTime>
 				<FinalDate><![CDATA[1762221600000]]></FinalDate>
@@ -5905,6 +5916,18 @@ edit_carsSpeed.setValue( (Double) values[2], true );
 		<Resource>
 			<Id>1764527639762</Id>
 			<Path><![CDATA[finishPoint.png]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+		<Resource>
+			<Id>1768397788687</Id>
+			<Path><![CDATA[flash.png]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+		<Resource>
+			<Id>1768397797379</Id>
+			<Path><![CDATA[baby.png]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 			<Location>FILE_SYSTEM</Location>
 		</Resource>
