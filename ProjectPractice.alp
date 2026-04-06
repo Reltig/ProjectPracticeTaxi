@@ -569,7 +569,7 @@ schedule(order);]]></Action>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
 					<Action><![CDATA[var refuseOrder = orders.stream()
-	.filter(order -> order.finishTime == 0.0)
+	.filter(order -> order.finishTime == 0.0 && order.vechicle != null)
 	.findFirst();
 if (!refuseOrder.isEmpty())
 	refuseOrder.get().refuse();]]></Action>
