@@ -641,7 +641,7 @@ prepare();]]></StartupCode>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[Weekday]]></Code>
+							<Code><![CDATA[WeekdaySnow]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1776954249880</Id>
@@ -2289,7 +2289,7 @@ return c;]]></Body>
 					<Rotation>0.0</Rotation>
 					<Color>-16777216</Color>
 					<Text><![CDATA[0 мин]]></Text>
-					<TextCode><![CDATA[String.format("%.1f мин", completedOrders == 0? 0 : totalWaitingTime / startedOrders )]]></TextCode>
+					<TextCode><![CDATA[String.format("%.1f мин", startedOrders == 0? 0 : totalWaitingTime / startedOrders )]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>16</Size>
@@ -2878,8 +2878,8 @@ return c;]]></Body>
 					<Color>-16777216</Color>
 					<Text><![CDATA[500 р]]></Text>
 					<TextCode><![CDATA[String.format("%.1f р", 
-   completedOrders > 0 ? 
-   (totalIncomeEconom + totalIncomeComfort + totalIncomeBusiness) / workingVehicles : 0)]]></TextCode>
+   workingVehicles > 0 ? 
+   (totalIncomeEconom+totalIncomeComfort+totalIncomeBusiness) / workingVehicles : 0)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>16</Size>
@@ -4176,10 +4176,9 @@ order.duration = order.finishTime - order.startTime;
 main.allOrdersDuration += order.duration;
 main.orderDurationsDataset.add(order.duration); //для гистограммы
 main.mediumOrderDuration = main.allOrdersDuration / main.completedOrders;
-
+//доход водителя с поездки
 var newIncome = getOrderIncome(distanceToFinish, order.duration, main.highDemand);
-income += newIncome;
-main.ordersIncome += newIncome;
+main.ordersIncome += newIncome; //суммарная стоимость поездки
 
 // считаем суммарный доход для каждого вида сервиса
 updateTotalIncome(newIncome);
@@ -4439,7 +4438,6 @@ main.completedOrdersPerVehicle = (double)main.completedOrders/main.workingVehicl
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1775461355704" Target="1762514372826" Trigger="timeout">
 						<Action><![CDATA[var newIncome = calculateRefusalIncome(waitingTime);
-income += newIncome;
 //начисляем водителю компенсацию за неявку клиента
 updateTotalIncome(newIncome); 
 waitingTime = 0;
@@ -4666,7 +4664,8 @@ return 1.0;]]></Body>
 					</Parameter>
 					<Body><![CDATA[if (type == ServiceType.Econom) main.totalIncomeEconom += value;
 else if (type == ServiceType.Comfort) main.totalIncomeComfort += value;
-else if (type == ServiceType.Business) main.totalIncomeBusiness += value;]]></Body>
+else if (type == ServiceType.Business) main.totalIncomeBusiness += value;
+income += value;]]></Body>
 				</Function>
 			</Functions>
 			<AgentLinks>
