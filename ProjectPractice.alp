@@ -961,7 +961,6 @@ businessCarsCount = filter(vehicles, v -> v.type == ServiceType.Business).size()
     "runID", "dayType", "time", "trafficLevel", "highDemand", "precipitationLevel",
     "mediumTravelCost", "mediumCostEconom", "mediumCostComfort", "mediumCostBusiness",
     "mediumIncome",
-    //"incomeEconom", "incomeComfort","incomeBusiness",
     "completedOrders", "completedOrdersByCar", 
     "mediumTravelTime", "mediumWaitingTime", "mediumUrgentReactTime",
     "allWorkingCars", "currentBusyCars", "emptyMileage",
@@ -990,7 +989,6 @@ var mediumWaitingTime = startedOrders == 0? 0 : totalWaitingTime / startedOrders
 Object[] values = {
 	runDateTime, day, time, trafficLevel, highDemand, precipitation,
 	mediumTravelCost,
-	//"","","",
 	mediumIncome, mediumIncomeEconom, mediumIncomeComfort, mediumIncomeBusiness,
 	completedOrders, completedOrdersPerVehicle,
 	mediumOrderDuration, mediumWaitingTime, reactionTimeMedium,
