@@ -504,6 +504,93 @@ prepare();]]></StartupCode>
 						</InitialValue>
 					</Properties>
 				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1777229351781</Id>
+					<Name><![CDATA[refusedOrders]]></Name>
+					<X>-300</X><Y>600</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[int]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1777229859139</Id>
+					<Name><![CDATA[mediumCostEconom]]></Name>
+					<X>-630</X><Y>600</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1777229913224</Id>
+					<Name><![CDATA[mediumCostComfort]]></Name>
+					<X>-630</X><Y>630</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[0]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1777229940986</Id>
+					<Name><![CDATA[mediumCostBusiness]]></Name>
+					<X>-630</X><Y>660</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1777230931570</Id>
+					<Name><![CDATA[currentStatsRow]]></Name>
+					<X>-570</X><Y>100</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[int]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[stats.getLastRowNum(1) + 2;]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1777231172379</Id>
+					<Name><![CDATA[runDateTime]]></Name>
+					<X>-570</X><Y>120</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[Date]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[new Date();]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
 				<Variable Class="Parameter">
 					<Id>1765468115624</Id>
 					<Name><![CDATA[horizontalNodes]]></Name>
@@ -839,6 +926,91 @@ currentRowTraffic += 1;]]></Action>
 comfortCarsCount = filter(vehicles, v -> v.type == ServiceType.Comfort).size();
 businessCarsCount = filter(vehicles, v -> v.type == ServiceType.Business).size();]]></Action>
 				</Event>
+				<Event>
+					<Id>1777227813359</Id>
+					<Name><![CDATA[writeLogs]]></Name>
+					<Description><![CDATA[Пишет логи в файл статистики]]></Description>
+					<X>-310</X><Y>80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties TriggerType="timeout" Mode="cyclic">
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</Timeout>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
+						</Rate>
+						<Id>1777227813357</Id>
+						<OccurrenceAtTime>true</OccurrenceAtTime>
+						<OccurrenceDate>1777276800000</OccurrenceDate>
+						<OccurrenceTime Class="CodeUnitValue">
+							<Code><![CDATA[0]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</OccurrenceTime>
+						<RecurrenceCode Class="CodeUnitValue">
+							<Code><![CDATA[10]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
+						</RecurrenceCode>
+						<Condition><![CDATA[false]]></Condition>
+					</Properties>
+					<Action><![CDATA[String[] headers = { //заголовки таблицы Excel
+    "runID", "dayType", "time", "trafficLevel", "highDemand", "precipitationLevel",
+    "mediumTravelCost", "mediumCostEconom", "mediumCostComfort", "mediumCostBusiness",
+    "mediumIncome",
+    //"incomeEconom", "incomeComfort","incomeBusiness",
+    "completedOrders", "completedOrdersByCar", 
+    "mediumTravelTime", "mediumWaitingTime", "mediumUrgentReactTime",
+    "allWorkingCars", "currentBusyCars", "emptyMileage",
+    "ordersLost", "ordersRefused"
+};
+String day = dayType.toString();//тип дня
+//текущее модельное время (часы и минуты)
+String time = String.format("%02d:%02d", getHourOfDay(), getMinute());
+//считываем уровень осадков
+var precipitation = trafficWeather.getCellStringValue(day, currentRowTraffic, 3);
+//средняя стоимость поездки
+var mediumTravelCost = completedOrders > 0? ordersIncome / completedOrders : 0;
+//средний доход водителя по всем категориям
+var mediumIncome =  workingVehicles > 0 ? 
+	(totalIncomeEconom+totalIncomeComfort+totalIncomeBusiness) / workingVehicles : 0;
+var mediumIncomeEconom = economCarsCount > 0 ?  //средний доход эконом
+   (totalIncomeEconom) / economCarsCount : 0;
+var mediumIncomeComfort = comfortCarsCount > 0 ? //средний доход комфорт
+   (totalIncomeComfort) / comfortCarsCount : 0;
+var mediumIncomeBusiness = businessCarsCount > 0 ? //средний доход бизнес
+   (totalIncomeBusiness) / businessCarsCount : 0; 
+   
+// сред. время ожидания клиента
+var mediumWaitingTime = startedOrders == 0? 0 : totalWaitingTime / startedOrders ;
+//значения для всех столбцов
+Object[] values = {
+	runDateTime, day, time, trafficLevel, highDemand, precipitation,
+	mediumTravelCost,
+	//"","","",
+	mediumIncome, mediumIncomeEconom, mediumIncomeComfort, mediumIncomeBusiness,
+	completedOrders, completedOrdersPerVehicle,
+	mediumOrderDuration, mediumWaitingTime, reactionTimeMedium,
+	workingVehicles, busyVehicles, emptyMileage,
+	lostOrders, refusedOrders
+};
+
+if (values.length == headers.length){
+    //заполняем столбцы Excel
+	for (int i = 0; i < headers.length; i++) {
+	    // Записываем значение в i-й столбец на первом листе
+	    stats.setCellValue(values[i].toString(), 1, currentStatsRow, i+1);
+	}
+	currentStatsRow++; //увеличиваем номер строки для следующей записи
+    stats.writeFile(); // сохраняем все изменения
+}
+else{ 
+	traceln("Невозможно записать файл статистики, кол-во заголовков и значений разное!");
+}]]></Action>
+				</Event>
 			</Events>
 			<Functions>
 				<Function AccessType="default" StaticFunction="false">
@@ -1090,6 +1262,22 @@ return c;]]></Body>
 					<ResourceReference>
 						<PackageName><![CDATA[projectpractice]]></PackageName>
 						<ClassName><![CDATA[traffic_weather.xlsx]]></ClassName>
+					</ResourceReference>
+					<SaveInSnapshot>false</SaveInSnapshot>
+					<LoadOnStartup>true</LoadOnStartup>
+					<SaveOnDispose>true</SaveOnDispose>
+				</ExcelFile>
+				<ExcelFile>
+					<Id>1777228174341</Id>
+					<Name><![CDATA[stats]]></Name>
+					<X>-570</X><Y>70</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<ResourceReference>
+						<PackageName><![CDATA[projectpractice]]></PackageName>
+						<ClassName><![CDATA[stats.xlsx]]></ClassName>
 					</ResourceReference>
 					<SaveInSnapshot>false</SaveInSnapshot>
 					<LoadOnStartup>true</LoadOnStartup>
@@ -1483,7 +1671,7 @@ return c;]]></Body>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Width>1040</Width>
-					<Height>720</Height>
+					<Height>840</Height>
 					<GISShapes>
 					</GISShapes>
 					<Latitude>56.83951263025168</Latitude>
@@ -1628,7 +1816,7 @@ return c;]]></Body>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
 					<Width>450</Width>
-					<Height>810</Height>
+					<Height>840</Height>
 					<Rotation>0.0</Rotation>
 					<FillColor>-1</FillColor>
 					<FillMaterial>null</FillMaterial>
@@ -2132,7 +2320,7 @@ return c;]]></Body>
     			<BarChart>
 					<Id>1767010470954</Id>
 					<Name><![CDATA[chart1]]></Name>
-					<X>450</X><Y>790</Y>
+					<X>450</X><Y>870</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2344,7 +2532,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776951485793</Id>
 					<Name><![CDATA[line1]]></Name>
-					<X>340</X><Y>730</Y>
+					<X>340</X><Y>760</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2362,7 +2550,7 @@ return c;]]></Body>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
 					<Dx>0</Dx>
-					<Dy>-450</Dy>
+					<Dy>-480</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Text>
@@ -2890,7 +3078,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975303971</Id>
 					<Name><![CDATA[text28]]></Name>
-					<X>10</X><Y>730</Y>
+					<X>10</X><Y>770</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2913,7 +3101,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975303973</Id>
 					<Name><![CDATA[text29]]></Name>
-					<X>150</X><Y>770</Y>
+					<X>150</X><Y>810</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2937,7 +3125,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975340296</Id>
 					<Name><![CDATA[text30]]></Name>
-					<X>150</X><Y>730</Y>
+					<X>150</X><Y>770</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2958,7 +3146,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975350089</Id>
 					<Name><![CDATA[text31]]></Name>
-					<X>360</X><Y>730</Y>
+					<X>360</X><Y>770</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2979,7 +3167,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975350790</Id>
 					<Name><![CDATA[text32]]></Name>
-					<X>250</X><Y>730</Y>
+					<X>250</X><Y>770</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3000,7 +3188,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776975811583</Id>
 					<Name><![CDATA[line12]]></Name>
-					<X>140</X><Y>750</Y>
+					<X>10</X><Y>760</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3017,14 +3205,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>300</Dx>
+					<Dx>430</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776975822601</Id>
 					<Name><![CDATA[line13]]></Name>
-					<X>340</X><Y>810</Y>
+					<X>340</X><Y>840</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3048,7 +3236,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776975840439</Id>
 					<Name><![CDATA[line14]]></Name>
-					<X>235</X><Y>810</Y>
+					<X>230</X><Y>840</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3066,13 +3254,13 @@ return c;]]></Body>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
 					<Dx>0</Dx>
-					<Dy>-90</Dy>
+					<Dy>-80</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776975845089</Id>
 					<Name><![CDATA[line15]]></Name>
-					<X>140</X><Y>810</Y>
+					<X>140</X><Y>840</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3090,7 +3278,7 @@ return c;]]></Body>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
 					<Dx>0</Dx>
-					<Dy>-90</Dy>
+					<Dy>-80</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
@@ -3120,7 +3308,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776976369403</Id>
 					<Name><![CDATA[text33]]></Name>
-					<X>250</X><Y>770</Y>
+					<X>250</X><Y>810</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3144,7 +3332,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776976401248</Id>
 					<Name><![CDATA[text34]]></Name>
-					<X>360</X><Y>770</Y>
+					<X>360</X><Y>810</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3158,6 +3346,73 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%.1f р", 
    businessCarsCount > 0 ? 
    (totalIncomeBusiness) / businessCarsCount : 0)]]></TextCode>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>16</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Line>
+					<Id>1777229531649</Id>
+					<Name><![CDATA[line17]]></Name>
+					<X>140</X><Y>800</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>3</LineWidth>
+					<LineColor>-8355712</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<Dx>300</Dx>
+					<Dy>0</Dy>
+					<Dz>0</Dz>
+				</Line>
+				<Text>
+					<Id>1777229595088</Id>
+					<Name><![CDATA[text35]]></Name>
+					<X>10</X><Y>730</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[Отмененных заказов]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>16</Size>
+						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1777229623567</Id>
+					<Name><![CDATA[text36]]></Name>
+					<X>350</X><Y>730</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[100]]></Text>
+					<TextCode><![CDATA[String.format("%d", refusedOrders)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>16</Size>
@@ -4343,7 +4598,8 @@ main.completedOrdersPerVehicle = (double)main.completedOrders/main.workingVehicl
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1762514452820" Target="1762514372826" Trigger="message">
-						<Action><![CDATA[stop();]]></Action>
+						<Action><![CDATA[main.refusedOrders++;
+stop();]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -7795,6 +8051,12 @@ edit_carsSpeed.setValue( (Double) values[2], true );
 		<Resource>
 			<Id>1776949904749</Id>
 			<Path><![CDATA[traffic_weather.xlsx]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+			<Location>FILE_SYSTEM</Location>
+		</Resource>
+		<Resource>
+			<Id>1777228105720</Id>
+			<Path><![CDATA[stats.xlsx]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 			<Location>FILE_SYSTEM</Location>
 		</Resource>
