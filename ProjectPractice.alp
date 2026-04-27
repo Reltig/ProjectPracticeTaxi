@@ -245,7 +245,6 @@ prepare();]]></StartupCode>
 				<Variable Class="PlainVariable">
 					<Id>1766480244950</Id>
 					<Name><![CDATA[lostOrders]]></Name>
-					<Description><![CDATA[кол-во свободных машин]]></Description>
 					<X>-170</X><Y>570</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -825,7 +824,7 @@ schedule(order);]]></Action>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</Timeout>
 						<Rate Class="CodeUnitValue">
-							<Code><![CDATA[75]]></Code>
+							<Code><![CDATA[2]]></Code>
 							<Unit Class="RateUnits"><![CDATA[PER_HOUR]]></Unit>
 						</Rate>
 						<Id>1775458799088</Id>
@@ -841,15 +840,17 @@ schedule(order);]]></Action>
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
 					</Properties>
-					<Action><![CDATA[Order refuseOrder = orders.stream()
-	.filter(order -> order.finishTime == 0.0 && order.vechicle == null)
+					<Action><![CDATA[//выбираем заказ, которому еще не назначен водитель
+Order refuseOrder = orders.stream()
+	.filter(order -> order.finishTime == 0.0 && 
+			order.vechicle == null)
 	.findFirst()
 	.orElse(null);
+//если такой заказ найден, удаляем его из очереди заказов
 if (refuseOrder != null) {
     int index = orders.indexOf(refuseOrder);
     if (index != -1) {
         orders.remove(index);
-        traceln("Удален заказ с индексом: " + index);
         refusedOrders++;
     }
 }]]></Action>
@@ -959,7 +960,7 @@ businessCarsCount = filter(vehicles, v -> v.type == ServiceType.Business).size()
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</OccurrenceTime>
 						<RecurrenceCode Class="CodeUnitValue">
-							<Code><![CDATA[10]]></Code>
+							<Code><![CDATA[15]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</RecurrenceCode>
 						<Condition><![CDATA[false]]></Condition>
@@ -1668,7 +1669,7 @@ return c;]]></Body>
 				<GISMap>
 					<Id>1762251623048</Id>
 					<Name><![CDATA[map]]></Name>
-					<X>240</X><Y>0</Y>
+					<X>220</X><Y>0</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1676,7 +1677,7 @@ return c;]]></Body>
 					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
 					<EmbeddedIcon>false</EmbeddedIcon>
 					<Width>1040</Width>
-					<Height>840</Height>
+					<Height>760</Height>
 					<GISShapes>
 					</GISShapes>
 					<Latitude>56.83951263025168</Latitude>
@@ -1820,8 +1821,8 @@ return c;]]></Body>
 					<LineColor>-16777216</LineColor>
 					<LineMaterial>null</LineMaterial>
 					<LineStyle>SOLID</LineStyle>
-					<Width>450</Width>
-					<Height>840</Height>
+					<Width>430</Width>
+					<Height>760</Height>
 					<Rotation>0.0</Rotation>
 					<FillColor>-1</FillColor>
 					<FillMaterial>null</FillMaterial>
@@ -1829,7 +1830,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1762520037030</Id>
 					<Name><![CDATA[text]]></Name>
-					<X>350</X><Y>370</Y>
+					<X>340</X><Y>340</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1843,7 +1844,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%s", completedOrders)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -1851,7 +1852,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1763195656457</Id>
 					<Name><![CDATA[text1]]></Name>
-					<X>350</X><Y>450</Y>
+					<X>340</X><Y>410</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1865,7 +1866,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%.1f мин", mediumOrderDuration)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -1873,7 +1874,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1763295919557</Id>
 					<Name><![CDATA[text2]]></Name>
-					<X>350</X><Y>650</Y>
+					<X>340</X><Y>585</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1887,7 +1888,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%.1f км", emptyMileage)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -1895,7 +1896,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1764338660994</Id>
 					<Name><![CDATA[text3]]></Name>
-					<X>10</X><Y>570</Y>
+					<X>10</X><Y>515</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1909,7 +1910,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("Загрузка бортов за весь период")]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -1935,7 +1936,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766480211870</Id>
 					<Name><![CDATA[text4]]></Name>
-					<X>350</X><Y>690</Y>
+					<X>340</X><Y>620</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1949,7 +1950,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%.0f", lostOrders)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2068,7 +2069,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766484679536</Id>
 					<Name><![CDATA[text8]]></Name>
-					<X>350</X><Y>410</Y>
+					<X>340</X><Y>375</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2082,7 +2083,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%.0f", completedOrdersPerVehicle)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2090,7 +2091,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766504110450</Id>
 					<Name><![CDATA[text9]]></Name>
-					<X>350</X><Y>530</Y>
+					<X>340</X><Y>480</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2104,7 +2105,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%.1f мин", reactionTimeMedium)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2112,7 +2113,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1766504444867</Id>
 					<Name><![CDATA[text10]]></Name>
-					<X>10</X><Y>370</Y>
+					<X>10</X><Y>340</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2126,7 +2127,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("Выполнено заказов")]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2134,7 +2135,7 @@ return c;]]></Body>
     			<Histogram>
 					<Id>1766511055136</Id>
 					<Name><![CDATA[chart]]></Name>
-					<X>30</X><Y>90</Y>
+					<X>20</X><Y>80</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2155,15 +2156,15 @@ return c;]]></Body>
 						</RecurrenceCode>
 					</RecurrenceProperties>
 					<EmbeddedIcon>false</EmbeddedIcon>
-					<Width>320</Width>
-					<Height>180</Height>
+					<Width>310</Width>
+					<Height>170</Height>
 					<BackgroundColor/>
 					<BorderColor/>
 					<ChartArea>
 						<XOffset>50</XOffset>
 						<YOffset>20</YOffset>
-						<Width>240</Width>
-						<Height>100</Height>
+						<Width>230</Width>
+						<Height>90</Height>
 						<BackgroundColor>-1</BackgroundColor>
 						<BorderColor>-16777216</BorderColor>
 						<GridColor>-12566464</GridColor>
@@ -2219,7 +2220,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1767007674380</Id>
 					<Name><![CDATA[text11]]></Name>
-					<X>350</X><Y>570</Y>
+					<X>340</X><Y>515</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2233,7 +2234,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format(workingVehicles + "/" + vehicles.size())]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2241,7 +2242,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1767007891868</Id>
 					<Name><![CDATA[text13]]></Name>
-					<X>350</X><Y>610</Y>
+					<X>340</X><Y>550</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2255,7 +2256,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format(busyVehicles + "/" + vehicles.size())]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2449,7 +2450,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1775463512478</Id>
 					<Name><![CDATA[text12]]></Name>
-					<X>350</X><Y>290</Y>
+					<X>340</X><Y>270</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2463,7 +2464,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%.1f р", completedOrders > 0 ? ordersIncome / completedOrders : 0)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2471,7 +2472,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776949078304</Id>
 					<Name><![CDATA[waitingTimeValueText]]></Name>
-					<X>350</X><Y>490</Y>
+					<X>340</X><Y>445</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2485,7 +2486,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%.1f мин", startedOrders == 0? 0 : totalWaitingTime / startedOrders )]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2507,7 +2508,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("Сейчас %02d:%02d", getHourOfDay(), getMinute())]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>18</Size>
+						<Size>16</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2515,7 +2516,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776951114418</Id>
 					<Name><![CDATA[text16]]></Name>
-					<X>10</X><Y>35</Y>
+					<X>10</X><Y>40</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2529,7 +2530,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("Уровень пробок: %s", trafficLevel)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>18</Size>
+						<Size>16</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2537,7 +2538,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776951485793</Id>
 					<Name><![CDATA[line1]]></Name>
-					<X>340</X><Y>760</Y>
+					<X>330</X><Y>750</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2561,7 +2562,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776951598280</Id>
 					<Name><![CDATA[text17]]></Name>
-					<X>10</X><Y>410</Y>
+					<X>10</X><Y>375</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2574,7 +2575,7 @@ return c;]]></Body>
 					<Text><![CDATA[Выполнено заказов в среднем на борт]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2582,7 +2583,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776951703159</Id>
 					<Name><![CDATA[text18]]></Name>
-					<X>10</X><Y>450</Y>
+					<X>10</X><Y>410</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2595,7 +2596,7 @@ return c;]]></Body>
 					<Text><![CDATA[Среднее время выполнения заказа]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2603,7 +2604,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776951799233</Id>
 					<Name><![CDATA[line2]]></Name>
-					<X>10</X><Y>600</Y>
+					<X>10</X><Y>540</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2620,14 +2621,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776951854038</Id>
 					<Name><![CDATA[line3]]></Name>
-					<X>10</X><Y>480</Y>
+					<X>10</X><Y>435</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2644,14 +2645,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776951858498</Id>
 					<Name><![CDATA[line4]]></Name>
-					<X>10</X><Y>520</Y>
+					<X>10</X><Y>470</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2668,14 +2669,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Text>
 					<Id>1776952082120</Id>
 					<Name><![CDATA[text19]]></Name>
-					<X>10</X><Y>530</Y>
+					<X>10</X><Y>480</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2688,7 +2689,7 @@ return c;]]></Body>
 					<Text><![CDATA[Сред. время реакции на срочный заказ]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2718,7 +2719,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776952383666</Id>
 					<Name><![CDATA[line5]]></Name>
-					<X>10</X><Y>560</Y>
+					<X>10</X><Y>505</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2735,14 +2736,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Text>
 					<Id>1776952407184</Id>
 					<Name><![CDATA[text21]]></Name>
-					<X>10</X><Y>490</Y>
+					<X>10</X><Y>445</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2755,7 +2756,7 @@ return c;]]></Body>
 					<Text><![CDATA[Среднее время ожидания клиента]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2763,7 +2764,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776952523650</Id>
 					<Name><![CDATA[text22]]></Name>
-					<X>10</X><Y>610</Y>
+					<X>10</X><Y>550</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2777,7 +2778,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("Загрузка бортов на текущий момент")]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2785,7 +2786,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776952568269</Id>
 					<Name><![CDATA[line6]]></Name>
-					<X>10</X><Y>640</Y>
+					<X>10</X><Y>575</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2802,14 +2803,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776952577179</Id>
 					<Name><![CDATA[line7]]></Name>
-					<X>10</X><Y>360</Y>
+					<X>10</X><Y>330</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2826,13 +2827,37 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776952761165</Id>
 					<Name><![CDATA[line8]]></Name>
+					<X>10</X><Y>365</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<ZHeight>10</ZHeight>
+					<LineWidth>3</LineWidth>
+					<LineColor>-8355712</LineColor>
+					<LineMaterial>null</LineMaterial>
+					<LineStyle>SOLID</LineStyle>
+					<BeginArrowSize>1</BeginArrowSize>
+					<BeginArrowStyle>0</BeginArrowStyle>
+					<EndArrowSize>1</EndArrowSize>
+					<EndArrowStyle>0</EndArrowStyle>
+					<Dx>410</Dx>
+					<Dy>0</Dy>
+					<Dz>0</Dz>
+				</Line>
+				<Line>
+					<Id>1776952774146</Id>
+					<Name><![CDATA[line9]]></Name>
 					<X>10</X><Y>400</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
@@ -2850,38 +2875,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
-					<Dy>0</Dy>
-					<Dz>0</Dz>
-				</Line>
-				<Line>
-					<Id>1776952774146</Id>
-					<Name><![CDATA[line9]]></Name>
-					<X>10</X><Y>440</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>10</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8355712</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<BeginArrowSize>1</BeginArrowSize>
-					<BeginArrowStyle>0</BeginArrowStyle>
-					<EndArrowSize>1</EndArrowSize>
-					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Text>
 					<Id>1776952858199</Id>
 					<Name><![CDATA[text23]]></Name>
-					<X>10</X><Y>650</Y>
+					<X>10</X><Y>585</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2894,7 +2895,7 @@ return c;]]></Body>
 					<Text><![CDATA[Пустой пробег]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2902,7 +2903,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776952891788</Id>
 					<Name><![CDATA[text24]]></Name>
-					<X>10</X><Y>690</Y>
+					<X>10</X><Y>620</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2915,7 +2916,7 @@ return c;]]></Body>
 					<Text><![CDATA[Потери заказов]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2923,7 +2924,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776952899378</Id>
 					<Name><![CDATA[text25]]></Name>
-					<X>10</X><Y>330</Y>
+					<X>10</X><Y>305</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2936,7 +2937,7 @@ return c;]]></Body>
 					<Text><![CDATA[Средний доход водителя за смену]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -2944,7 +2945,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776953778271</Id>
 					<Name><![CDATA[line]]></Name>
-					<X>10</X><Y>680</Y>
+					<X>10</X><Y>610</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2961,14 +2962,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776970516909</Id>
 					<Name><![CDATA[line10]]></Name>
-					<X>10</X><Y>320</Y>
+					<X>10</X><Y>295</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -2985,14 +2986,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Text>
 					<Id>1776972692707</Id>
 					<Name><![CDATA[text14]]></Name>
-					<X>10</X><Y>290</Y>
+					<X>10</X><Y>270</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3006,7 +3007,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("Средняя стоимость поездки")]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3059,7 +3060,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776973501829</Id>
 					<Name><![CDATA[text27]]></Name>
-					<X>350</X><Y>330</Y>
+					<X>340</X><Y>305</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3075,7 +3076,7 @@ return c;]]></Body>
    (totalIncomeEconom+totalIncomeComfort+totalIncomeBusiness) / workingVehicles : 0)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3083,7 +3084,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975303971</Id>
 					<Name><![CDATA[text28]]></Name>
-					<X>10</X><Y>770</Y>
+					<X>10</X><Y>690</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3098,7 +3099,7 @@ return c;]]></Body>
 за смену]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>15</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3106,7 +3107,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975303973</Id>
 					<Name><![CDATA[text29]]></Name>
-					<X>150</X><Y>810</Y>
+					<X>150</X><Y>720</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3122,7 +3123,7 @@ return c;]]></Body>
    (totalIncomeEconom) / economCarsCount : 0)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3130,7 +3131,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975340296</Id>
 					<Name><![CDATA[text30]]></Name>
-					<X>150</X><Y>770</Y>
+					<X>150</X><Y>690</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3143,7 +3144,7 @@ return c;]]></Body>
 					<Text><![CDATA[Эконом]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>15</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3151,7 +3152,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975350089</Id>
 					<Name><![CDATA[text31]]></Name>
-					<X>360</X><Y>770</Y>
+					<X>340</X><Y>690</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3164,7 +3165,7 @@ return c;]]></Body>
 					<Text><![CDATA[Бизнес]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>15</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3172,7 +3173,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776975350790</Id>
 					<Name><![CDATA[text32]]></Name>
-					<X>250</X><Y>770</Y>
+					<X>240</X><Y>690</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3185,7 +3186,7 @@ return c;]]></Body>
 					<Text><![CDATA[Комфорт]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>15</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3193,7 +3194,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1776975811583</Id>
 					<Name><![CDATA[line12]]></Name>
-					<X>10</X><Y>760</Y>
+					<X>10</X><Y>680</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3210,38 +3211,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
-					<Dz>0</Dz>
-				</Line>
-				<Line>
-					<Id>1776975822601</Id>
-					<Name><![CDATA[line13]]></Name>
-					<X>340</X><Y>840</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>10</ZHeight>
-					<LineWidth>3</LineWidth>
-					<LineColor>-8355712</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<BeginArrowSize>1</BeginArrowSize>
-					<BeginArrowStyle>0</BeginArrowStyle>
-					<EndArrowSize>1</EndArrowSize>
-					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>0</Dx>
-					<Dy>-80</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776975840439</Id>
 					<Name><![CDATA[line14]]></Name>
-					<X>230</X><Y>840</Y>
+					<X>230</X><Y>750</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3259,13 +3236,13 @@ return c;]]></Body>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
 					<Dx>0</Dx>
-					<Dy>-80</Dy>
+					<Dy>-70</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776975845089</Id>
 					<Name><![CDATA[line15]]></Name>
-					<X>140</X><Y>840</Y>
+					<X>140</X><Y>750</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3283,13 +3260,13 @@ return c;]]></Body>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
 					<Dx>0</Dx>
-					<Dy>-80</Dy>
+					<Dy>-70</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Line>
 					<Id>1776975922486</Id>
 					<Name><![CDATA[line16]]></Name>
-					<X>10</X><Y>720</Y>
+					<X>10</X><Y>645</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3306,14 +3283,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>430</Dx>
+					<Dx>410</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Text>
 					<Id>1776976369403</Id>
 					<Name><![CDATA[text33]]></Name>
-					<X>250</X><Y>810</Y>
+					<X>240</X><Y>720</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3329,7 +3306,7 @@ return c;]]></Body>
    (totalIncomeComfort) / comfortCarsCount : 0)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3337,7 +3314,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1776976401248</Id>
 					<Name><![CDATA[text34]]></Name>
-					<X>360</X><Y>810</Y>
+					<X>340</X><Y>720</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3353,7 +3330,7 @@ return c;]]></Body>
    (totalIncomeBusiness) / businessCarsCount : 0)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3361,7 +3338,7 @@ return c;]]></Body>
 				<Line>
 					<Id>1777229531649</Id>
 					<Name><![CDATA[line17]]></Name>
-					<X>140</X><Y>800</Y>
+					<X>140</X><Y>710</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3378,14 +3355,14 @@ return c;]]></Body>
 					<BeginArrowStyle>0</BeginArrowStyle>
 					<EndArrowSize>1</EndArrowSize>
 					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>300</Dx>
+					<Dx>280</Dx>
 					<Dy>0</Dy>
 					<Dz>0</Dz>
 				</Line>
 				<Text>
 					<Id>1777229595088</Id>
 					<Name><![CDATA[text35]]></Name>
-					<X>10</X><Y>730</Y>
+					<X>10</X><Y>655</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3398,7 +3375,7 @@ return c;]]></Body>
 					<Text><![CDATA[Отмененных заказов]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -3406,7 +3383,7 @@ return c;]]></Body>
 				<Text>
 					<Id>1777229623567</Id>
 					<Name><![CDATA[text36]]></Name>
-					<X>350</X><Y>730</Y>
+					<X>340</X><Y>655</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3420,7 +3397,7 @@ return c;]]></Body>
 					<TextCode><![CDATA[String.format("%d", refusedOrders)]]></TextCode>
 					<Font>
 						<Name>SansSerif</Name>
-						<Size>16</Size>
+						<Size>14</Size>
 						<Style>1</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
@@ -5488,17 +5465,6 @@ income += value;]]></Body>
 					<Properties>	
 					</Properties>	
 				</StatechartElement>
-				<StatechartElement Class="FinalState" ParentState="ROOT_NODE">
-					<Id>1777282662599</Id>
-					<Name><![CDATA[finalState]]></Name>
-					<X>400</X><Y>130</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<Properties>	
-					</Properties>	
-				</StatechartElement>
 				<StatechartElement Class="EntryPoint" ParentState="ROOT_NODE">
 					<Id>1763726969816</Id>
 					<Name><![CDATA[statechart]]></Name>
@@ -5573,36 +5539,6 @@ income += value;]]></Body>
 						<DefaultTransition>true</DefaultTransition>
 						<FilterType><![CDATA[equalsTo]]></FilterType>
 						<EqualsExpression><![CDATA["leave!"]]></EqualsExpression>
-						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
-					</Properties>	
-				</StatechartElement>
-				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
-					<Id>1777282721684</Id>
-					<Name><![CDATA[transition1]]></Name>
-					<X>330</X><Y>130</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<Points>
-						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>62</X><Y>0</Y></Point>
-					</Points>
-					<IconOffset>20.0</IconOffset>
-					<Properties Source="1763726971975" Target="1777282662599" Trigger="message">
-						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
-						</Timeout>
-						<Condition><![CDATA[true]]></Condition>
-						<Rate Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
-							<Unit Class="RateUnits"><![CDATA[PER_MINUTE]]></Unit>
-						</Rate>
-						<MessageType><![CDATA[Object]]></MessageType>
-						<DefaultTransition>true</DefaultTransition>
-						<FilterType><![CDATA[equalsTo]]></FilterType>
-						<EqualsExpression><![CDATA["refuse"]]></EqualsExpression>
 						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
 					</Properties>	
 				</StatechartElement>
