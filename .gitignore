@@ -2,3 +2,4 @@ cache
 database
 *.alp.autosave
 *.original.alp
+stats.xlsx
