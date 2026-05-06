@@ -62,7 +62,8 @@ import java.io.IOException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
-import org.json.simple.JSONArray;]]></Import>
+import org.json.simple.JSONArray;
+import org.geotools.referencing.Console;]]></Import>
 			<StartupCode><![CDATA[Random random = new Random();
 prepare();]]></StartupCode>
 			<Generic>false</Generic>
@@ -593,7 +594,7 @@ prepare();]]></StartupCode>
 				<Variable Class="Parameter">
 					<Id>1765468115624</Id>
 					<Name><![CDATA[horizontalNodes]]></Name>
-					<X>-450</X><Y>90</Y>
+					<X>-450</X><Y>110</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -603,7 +604,7 @@ prepare();]]></StartupCode>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[10]]></Code>
+							<Code><![CDATA[11]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1765468115622</Id>
@@ -617,7 +618,7 @@ prepare();]]></StartupCode>
 				<Variable Class="Parameter">
 					<Id>1765468167468</Id>
 					<Name><![CDATA[verticalNodes]]></Name>
-					<X>-450</X><Y>120</Y>
+					<X>-450</X><Y>140</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -627,7 +628,7 @@ prepare();]]></StartupCode>
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[10]]></Code>
+							<Code><![CDATA[11]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1765468167466</Id>
@@ -1093,21 +1094,24 @@ double yStep = (bottomLeft.getLatitude()-center.getLatitude())/verticalNodes
  	+ (topRight.getLatitude()-center.getLatitude())/horizontalNodes;
 Point2 d1 = new Point2((topRight.getLatitude()-center.getLatitude())/verticalNodes, (topRight.getLongitude()-center.getLongitude())/verticalNodes);
 Point2 d2 = new Point2((bottomLeft.getLatitude()-center.getLatitude())/horizontalNodes, (bottomLeft.getLongitude()-center.getLongitude())/horizontalNodes);
+//Point2[][] polygonsArray = (Point2[][])polygons.toArray();
 for(int i = 0; i < horizontalNodes + 1; i++) {
 	for(int j = 0; j < verticalNodes + 1; j++) {
-		Point2 newPos = new Point2(center.getLatitude() + d1.x * j + d2.x * i, center.getLongitude()  + d1.y * j + d2.y * i);
-		boolean pointInPolygons = false;
-		int k = 0;
-		while ((k <= polygons.size()-1) && (pointInPolygons = pointInPolygon(polygons.get(k++), newPos))){
-			System.out.println(k);
-		}			
-		if (pointInPolygons)
+		Point2 newPos = new Point2(center.getLatitude() + d1.x * j + d2.x * i, center.getLongitude()  + d1.y * j + d2.y * i);		
+		if (pointInPolygon(polygons, newPos))
 		 continue;
 		Endpoint e = add_endpoints();
 		e.setXY(newPos.x, newPos.y);
 		//e.moveTo(newPos.x, newPos.y);
 	}
-}]]></Body>
+}
+Point2[] testPolygon = new Point2[]{new Point2(-1.0, 1.0), new Point2(1.0, 1.0), new Point2(1.0, -1.0), new Point2(-1.0, -1.0)};
+List<Point2[]> test = new ArrayList<Point2[]>();
+test.add(testPolygon);
+Point2 in = new Point2(0.0, 0.0);
+Point2 out = new Point2(2.0, 0.0);
+System.out.println(pointInPolygon(test, in));
+System.out.println(pointInPolygon(test, out));]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
@@ -1120,26 +1124,57 @@ for(int i = 0; i < horizontalNodes + 1; i++) {
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Parameter>
-						<Name><![CDATA[verticles]]></Name>
-						<Type><![CDATA[Point2[]]]></Type>
+						<Name><![CDATA[polygons]]></Name>
+						<Type><![CDATA[List<Point2[]>]]></Type>
 					</Parameter>
 					<Parameter>
 						<Name><![CDATA[point]]></Name>
 						<Type><![CDATA[Point2]]></Type>
 					</Parameter>
-					<Body><![CDATA[boolean c = false;
-int n = verticles.length;
-for (int i = 0, j = n - 1; i < n; j = i++) {
-	if ((
-        (verticles[i].y < verticles[j].y) && (verticles[i].y <= point.y) && (point.y <= verticles[j].y) &&
-        ((verticles[j].y - verticles[i].y) * (point.x - verticles[i].x) > (verticles[j].x - verticles[i].x) * (point.y - verticles[i].y))
-      ) || (
-        (verticles[i].y > verticles[j].y) && (verticles[j].y <= point.y) && (point.y <= verticles[i].y) &&
-        ((verticles[j].y - verticles[i].y) * (point.x - verticles[i].x) < (verticles[j].x - verticles[i].x) * (point.y - verticles[i].y))
-      ))
-        c = !c;
+					<Body><![CDATA[for (Point2[] polygon : polygons) {
+    if (isPointInPolygon(polygon, point.x, point.y)) {
+        return true;
+    }
 }
-return c;]]></Body>
+return false;]]></Body>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
+					<ReturnType><![CDATA[boolean]]></ReturnType>
+					<Id>1778079438690</Id>
+					<Name><![CDATA[isPointInPolygon]]></Name>
+					<X>-450</X><Y>80</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Parameter>
+						<Name><![CDATA[polygon]]></Name>
+						<Type><![CDATA[Point2[]]]></Type>
+					</Parameter>
+					<Parameter>
+						<Name><![CDATA[x]]></Name>
+						<Type><![CDATA[double]]></Type>
+					</Parameter>
+					<Parameter>
+						<Name><![CDATA[y]]></Name>
+						<Type><![CDATA[double]]></Type>
+					</Parameter>
+					<Body><![CDATA[int n = polygon.length;
+if (n < 3) {
+    return false;
+}
+
+boolean inside = false;
+for (int i = 0, j = n - 1; i < n; j = i++) {
+    double xi = polygon[i].x, yi = polygon[i].y;
+    double xj = polygon[j].x, yj = polygon[j].y;
+
+    if (((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
+        inside = !inside;
+    }
+}
+return inside;]]></Body>
 				</Function>
 			</Functions>
 			<AnalysisData>
@@ -6928,27 +6963,6 @@ main.remove_orderAnimationsStart(this);]]></Action>
 				<Login><![CDATA[]]></Login>
 				<Password><![CDATA[]]></Password>
 			</ExternalConnection>
-			<ExternalConnection>
-				<Id>1776949916979</Id>
-				<Name><![CDATA[database]]></Name>
-				<X>0</X><Y>0</Y>
-				<Label><X>10</X><Y>0</Y></Label>
-				<PublicFlag>false</PublicFlag>
-				<PresentationFlag>true</PresentationFlag>
-				<ShowLabel>true</ShowLabel>
-				<DatabaseType>EXCEL_ACCESS</DatabaseType>
-				<ConnectionURL><![CDATA[]]></ConnectionURL>
-				<ConnectOnStartup>true</ConnectOnStartup>
-				<DatabaseName><![CDATA[]]></DatabaseName>
-				<ResourceReference>
-					<PackageName><![CDATA[projectpractice]]></PackageName>
-					<ClassName><![CDATA[traffic_weather.xlsx]]></ClassName>
-				</ResourceReference>
-				<Host><![CDATA[localhost]]></Host>
-				<JdbcDriverClassName><![CDATA[net.sourceforge.jtds.jdbc.Driver]]></JdbcDriverClassName>
-				<Login><![CDATA[]]></Login>
-				<Password><![CDATA[]]></Password>
-			</ExternalConnection>
 			<TableImportSettings>
 				<Id>1763145591621</Id>
 				<TableReference>
@@ -6958,46 +6972,6 @@ main.remove_orderAnimationsStart(this);]]></Action>
 				<ConnectionIndex>0</ConnectionIndex>
 				<ExternalTableName><![CDATA["Retailers"]]></ExternalTableName>
 				<AutoImport>false</AutoImport>
-			</TableImportSettings>
-			<TableImportSettings>
-				<Id>1776949926989</Id>
-				<TableReference>
-					<PackageName><![CDATA[projectpractice]]></PackageName>
-					<ClassName><![CDATA[weekday_snow]]></ClassName>
-				</TableReference>
-				<ConnectionIndex>1</ConnectionIndex>
-				<ExternalTableName><![CDATA["weekdaySnow"]]></ExternalTableName>
-				<AutoImport>true</AutoImport>
-			</TableImportSettings>
-			<TableImportSettings>
-				<Id>1776949926992</Id>
-				<TableReference>
-					<PackageName><![CDATA[projectpractice]]></PackageName>
-					<ClassName><![CDATA[weekday]]></ClassName>
-				</TableReference>
-				<ConnectionIndex>1</ConnectionIndex>
-				<ExternalTableName><![CDATA["weekday"]]></ExternalTableName>
-				<AutoImport>true</AutoImport>
-			</TableImportSettings>
-			<TableImportSettings>
-				<Id>1776949926995</Id>
-				<TableReference>
-					<PackageName><![CDATA[projectpractice]]></PackageName>
-					<ClassName><![CDATA[weekend]]></ClassName>
-				</TableReference>
-				<ConnectionIndex>1</ConnectionIndex>
-				<ExternalTableName><![CDATA["weekend"]]></ExternalTableName>
-				<AutoImport>true</AutoImport>
-			</TableImportSettings>
-			<TableImportSettings>
-				<Id>1776949926998</Id>
-				<TableReference>
-					<PackageName><![CDATA[projectpractice]]></PackageName>
-					<ClassName><![CDATA[weekend_snow]]></ClassName>
-				</TableReference>
-				<ConnectionIndex>1</ConnectionIndex>
-				<ExternalTableName><![CDATA["weekendSnow"]]></ExternalTableName>
-				<AutoImport>true</AutoImport>
 			</TableImportSettings>
 		</ImportSettings>
 		<ExportSettings>
