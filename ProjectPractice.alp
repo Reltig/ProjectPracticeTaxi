@@ -63,7 +63,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import org.json.simple.JSONArray;
-import org.geotools.referencing.Console;]]></Import>
+import org.geotools.referencing.Console;
+import com.healthmarketscience.jackcess.util.PatternColumnPredicate;]]></Import>
 			<StartupCode><![CDATA[Random random = new Random();
 prepare();]]></StartupCode>
 			<Generic>false</Generic>
@@ -564,7 +565,7 @@ prepare();]]></StartupCode>
 				<Variable Class="PlainVariable">
 					<Id>1777230931570</Id>
 					<Name><![CDATA[currentStatsRow]]></Name>
-					<X>-570</X><Y>100</Y>
+					<X>-610</X><Y>90</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -579,7 +580,7 @@ prepare();]]></StartupCode>
 				<Variable Class="PlainVariable">
 					<Id>1777231172379</Id>
 					<Name><![CDATA[runDateTime]]></Name>
-					<X>-570</X><Y>120</Y>
+					<X>-610</X><Y>110</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -588,6 +589,36 @@ prepare();]]></StartupCode>
 						<Type><![CDATA[Date]]></Type>        
 						<InitialValue Class="CodeValue">
 							<Code><![CDATA[new Date();]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1778746834027</Id>
+					<Name><![CDATA[ordersIntensity]]></Name>
+					<X>-640</X><Y>280</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[100]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1778747646491</Id>
+					<Name><![CDATA[precipitationLevel]]></Name>
+					<X>-470</X><Y>560</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[double]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[1]]></Code>
 						</InitialValue>
 					</Properties>
 				</Variable>
@@ -642,7 +673,7 @@ prepare();]]></StartupCode>
 				<Variable Class="Parameter">
 					<Id>1767010137730</Id>
 					<Name><![CDATA[waitingTime]]></Name>
-					<X>-450</X><Y>250</Y>
+					<X>-450</X><Y>280</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -667,7 +698,7 @@ prepare();]]></StartupCode>
 				<Variable Class="Parameter">
 					<Id>1767010160168</Id>
 					<Name><![CDATA[carsCount]]></Name>
-					<X>-450</X><Y>280</Y>
+					<X>-450</X><Y>310</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -692,7 +723,7 @@ prepare();]]></StartupCode>
 				<Variable Class="Parameter">
 					<Id>1767010175498</Id>
 					<Name><![CDATA[carsSpeed]]></Name>
-					<X>-450</X><Y>310</Y>
+					<X>-450</X><Y>340</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -718,7 +749,7 @@ prepare();]]></StartupCode>
 					<Id>1776954249882</Id>
 					<Name><![CDATA[dayType]]></Name>
 					<Description><![CDATA[День недели: будний день/ выходной, с осадками или без]]></Description>
-					<X>-450</X><Y>340</Y>
+					<X>-450</X><Y>370</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -770,7 +801,7 @@ prepare();]]></StartupCode>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
 						</Timeout>
 						<Rate Class="CodeUnitValue">
-							<Code><![CDATA[1500]]></Code>
+							<Code><![CDATA[ordersIntensity]]></Code>
 							<Unit Class="RateUnits"><![CDATA[PER_HOUR]]></Unit>
 						</Rate>
 						<Id>1762515203136</Id>
@@ -888,7 +919,9 @@ if (refuseOrder != null) {
 					</Properties>
 					<Action><![CDATA[String sheetName = dayType.toString(); // название листа зависит от дня недели
 int columnTraffic = 2; // номер колонки с уровнем пробок
-int columnDemand = 4;  // номер колонки с уровнем спроса  
+int columnPrecipitation = 3; // номер колонки с уровнем осадков
+int columnDemand = 4;  // номер колонки с уровнем спроса 
+ 
 
 // считываем уровень трафика из файла Excel
 trafficLevel = (int)trafficWeather.getCellNumericValue(sheetName, currentRowTraffic, columnTraffic);
@@ -897,6 +930,14 @@ trafficLevel = (int)trafficWeather.getCellNumericValue(sheetName, currentRowTraf
 var highDemandStr = trafficWeather.getCellStringValue(sheetName, currentRowTraffic, columnDemand);
 // приводим к типу boolean (без учета регистра)
 highDemand = "true".equalsIgnoreCase(highDemandStr);
+
+//считываем уровень осадков
+var precipitation = trafficWeather.getCellStringValue(sheetName, 
+						currentRowTraffic, columnPrecipitation);
+if ("-".equals(precipitation)) precipitationLevel = 0.0;
+else precipitationLevel = Double.parseDouble(precipitation);
+
+setOrdersIntensity();
 
 // при следующем срабатывании события будет считана следующая строка файла
 currentRowTraffic += 1;]]></Action>
@@ -968,6 +1009,7 @@ businessCarsCount = filter(vehicles, v -> v.type == ServiceType.Business).size()
 					</Properties>
 					<Action><![CDATA[String[] headers = { //заголовки таблицы Excel
     "runID", "dayType", "time", "trafficLevel", "highDemand", "precipitationLevel",
+    "ordersIntensity",
     "mediumTravelCost", "mediumCostEconom", "mediumCostComfort", "mediumCostBusiness",
     "mediumIncome",
     "completedOrders", "completedOrdersByCar", 
@@ -996,7 +1038,7 @@ var mediumIncomeBusiness = businessCarsCount > 0 ? //средний доход �
 var mediumWaitingTime = startedOrders == 0? 0 : totalWaitingTime / startedOrders ;
 //значения для всех столбцов
 Object[] values = {
-	runDateTime, day, time, trafficLevel, highDemand, precipitation,
+	runDateTime, day, time, trafficLevel, highDemand, precipitation, ordersIntensity,
 	mediumTravelCost,
 	mediumIncome, mediumIncomeEconom, mediumIncomeComfort, mediumIncomeBusiness,
 	completedOrders, completedOrdersPerVehicle,
@@ -1176,6 +1218,63 @@ for (int i = 0, j = n - 1; i < n; j = i++) {
 }
 return inside;]]></Body>
 				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>VOID</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1778746569219</Id>
+					<Name><![CDATA[setOrdersIntensity]]></Name>
+					<Description><![CDATA[Устанавливает интенсивность появления заказов]]></Description>
+					<X>-640</X><Y>310</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[double baseRate = 120.0;
+// уровень пробок
+double trafficMultiplier = getTrafficMiltiplier(); 
+ //уровень спроса
+double demandMultiplier = highDemand ? 1.7 : 1.0;
+// погодные условия
+double weatherMultiplier = getWeatherMultiplier(); 
+// время суток
+int hour = getHourOfDay();
+double timeMultiplier = (hour >= 16 && hour <= 20) ? 1.25 : 1.0;
+//считаем интенсивность появления заказов
+var intensity = baseRate * trafficMultiplier * demandMultiplier * 
+	    weatherMultiplier * timeMultiplier;
+	   
+ordersIntensity = intensity;]]></Body>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1778747005859</Id>
+					<Name><![CDATA[getTrafficMiltiplier]]></Name>
+					<X>-640</X><Y>340</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[if (trafficLevel <=3 ) return 0.8;
+else if (trafficLevel <=5 ) return 1.2;
+else if (trafficLevel <=7 ) return 1.8;
+else return 2.2;]]></Body>
+				</Function>
+				<Function AccessType="default" StaticFunction="false">
+					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
+					<ReturnType><![CDATA[double]]></ReturnType>
+					<Id>1778747350538</Id>
+					<Name><![CDATA[getWeatherMultiplier]]></Name>
+					<X>-640</X><Y>370</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Body><![CDATA[if (precipitationLevel  == 0.0) return 1.0;
+else if (precipitationLevel  <= 1.0) return 1.1;
+else if (precipitationLevel <= 3.0) return 1.4;
+else return 1.6;]]></Body>
+				</Function>
 			</Functions>
 			<AnalysisData>
     			<HistogramData>
@@ -1295,7 +1394,7 @@ return inside;]]></Body>
 				<ExcelFile>
 					<Id>1776955396248</Id>
 					<Name><![CDATA[trafficWeather]]></Name>
-					<X>-570</X><Y>30</Y>
+					<X>-610</X><Y>20</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1311,7 +1410,7 @@ return inside;]]></Body>
 				<ExcelFile>
 					<Id>1777228174341</Id>
 					<Name><![CDATA[stats]]></Name>
-					<X>-570</X><Y>70</Y>
+					<X>-610</X><Y>60</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -1993,7 +2092,7 @@ return inside;]]></Body>
 				<Text>
 					<Id>1766482113356</Id>
 					<Name><![CDATA[text5]]></Name>
-					<X>-460</X><Y>210</Y>
+					<X>-460</X><Y>240</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3050,7 +3149,7 @@ return inside;]]></Body>
 				<Text>
 					<Id>1776972947385</Id>
 					<Name><![CDATA[text26]]></Name>
-					<X>-370</X><Y>370</Y>
+					<X>-340</X><Y>400</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3071,7 +3170,7 @@ return inside;]]></Body>
 				<Line>
 					<Id>1776972977153</Id>
 					<Name><![CDATA[line11]]></Name>
-					<X>-390</X><Y>350</Y>
+					<X>-390</X><Y>380</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3434,6 +3533,27 @@ return inside;]]></Body>
 						<Name>SansSerif</Name>
 						<Size>14</Size>
 						<Style>1</Style>
+					</Font>
+					<Alignment>LEFT</Alignment>
+				</Text>
+				<Text>
+					<Id>1778747154199</Id>
+					<Name><![CDATA[text37]]></Name>
+					<X>-650</X><Y>240</Y>
+					<Label><X>0</X><Y>-10</Y></Label>
+					<PublicFlag>true</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<DrawMode>SHAPE_DRAW_2D</DrawMode>
+					<EmbeddedIcon>false</EmbeddedIcon>
+					<Z>0</Z>
+					<Rotation>0.0</Rotation>
+					<Color>-16777216</Color>
+					<Text><![CDATA[Интенсивность трафика]]></Text>
+					<Font>
+						<Name>SansSerif</Name>
+						<Size>14</Size>
+						<Style>0</Style>
 					</Font>
 					<Alignment>LEFT</Alignment>
 				</Text>
@@ -4491,6 +4611,7 @@ main.completedOrdersPerVehicle = (double)main.completedOrders/main.workingVehicl
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1762516979244" Target="1762514372826" Trigger="timeout">
+						<Action><![CDATA[traceln("waiting...")]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -4748,6 +4869,7 @@ main.busyVehicles--;]]></Action>
 int i = 0;
 orderIndex = 0;
 Order closestOrder = null;
+traceln("get from pool");
 
 // Получаем список заказов с высшим приоритетом
 List<Order> priorityOrders = main.orders.stream()
