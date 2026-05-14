@@ -4611,7 +4611,6 @@ main.completedOrdersPerVehicle = (double)main.completedOrders/main.workingVehicl
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1762516979244" Target="1762514372826" Trigger="timeout">
-						<Action><![CDATA[traceln("waiting...")]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[MINUTE]]></Unit>
@@ -4869,7 +4868,6 @@ main.busyVehicles--;]]></Action>
 int i = 0;
 orderIndex = 0;
 Order closestOrder = null;
-traceln("get from pool");
 
 // Получаем список заказов с высшим приоритетом
 List<Order> priorityOrders = main.orders.stream()
