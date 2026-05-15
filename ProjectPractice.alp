@@ -1121,7 +1121,7 @@ try {
     		.stream()
     		.map(coords -> {
     			JSONArray pair = (JSONArray)coords;
-    			return new Point2((double)pair.get(0), (double)pair.get(1));
+    			return new Point2((double)pair.get(1), (double)pair.get(0));
     		})
     		.toArray(Point2[]::new);
     	polygons.add(points);
@@ -1136,7 +1136,6 @@ double yStep = (bottomLeft.getLatitude()-center.getLatitude())/verticalNodes
  	+ (topRight.getLatitude()-center.getLatitude())/horizontalNodes;
 Point2 d1 = new Point2((topRight.getLatitude()-center.getLatitude())/verticalNodes, (topRight.getLongitude()-center.getLongitude())/verticalNodes);
 Point2 d2 = new Point2((bottomLeft.getLatitude()-center.getLatitude())/horizontalNodes, (bottomLeft.getLongitude()-center.getLongitude())/horizontalNodes);
-//Point2[][] polygonsArray = (Point2[][])polygons.toArray();
 for(int i = 0; i < horizontalNodes + 1; i++) {
 	for(int j = 0; j < verticalNodes + 1; j++) {
 		Point2 newPos = new Point2(center.getLatitude() + d1.x * j + d2.x * i, center.getLongitude()  + d1.y * j + d2.y * i);		
@@ -1146,14 +1145,7 @@ for(int i = 0; i < horizontalNodes + 1; i++) {
 		e.setXY(newPos.x, newPos.y);
 		//e.moveTo(newPos.x, newPos.y);
 	}
-}
-Point2[] testPolygon = new Point2[]{new Point2(-1.0, 1.0), new Point2(1.0, 1.0), new Point2(1.0, -1.0), new Point2(-1.0, -1.0)};
-List<Point2[]> test = new ArrayList<Point2[]>();
-test.add(testPolygon);
-Point2 in = new Point2(0.0, 0.0);
-Point2 out = new Point2(2.0, 0.0);
-System.out.println(pointInPolygon(test, in));
-System.out.println(pointInPolygon(test, out));]]></Body>
+}]]></Body>
 				</Function>
 				<Function AccessType="default" StaticFunction="false">
 					<ReturnModificator>RETURNS_VALUE</ReturnModificator>
